@@ -1,0 +1,93 @@
+services:
+  _defaults:
+    public: true
+    autowire: true
+
+  Axytos\KaufAufRechnung_OXID6\Configuration\PluginConfiguration:
+
+  Axytos\KaufAufRechnung_OXID6\Client\ApiHostProvider:
+
+  Axytos\KaufAufRechnung_OXID6\Client\ApiKeyProvider:
+
+  Axytos\KaufAufRechnung_OXID6\Client\PaymentMethodConfiguration:
+  
+  Axytos\KaufAufRechnung_OXID6\Client\Oxid6ShopVersionProvider:
+  
+  Axytos\KaufAufRechnung_OXID6\Logging\LoggerAdapter:
+
+  Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler:
+
+  Axytos\KaufAufRechnung_OXID6\Core\OrderCheckProcessStateMachine:
+
+  Axytos\KaufAufRechnung_OXID6\Core\InvoiceOrderContextFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\ShippingBasketPositionDtoCollectionFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\ShippingBasketPositionDtoFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceBasketDtoFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceBasketPositionDtoCollectionFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceBasketPositionDtoFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceTaxGroupDtoCollectionFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceTaxGroupDtoFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\CustomerDataDtoFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\InvoiceAddressDtoFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\DeliveryAddressDtoFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\BasketDtoFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\BasketPositionDtoCollectionFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataMapping\BasketPositionDtoFactory:
+
+  Axytos\ECommerce\Abstractions\ApiHostProviderInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Client\ApiHostProvider
+
+  Axytos\ECommerce\Abstractions\ApiKeyProviderInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Client\ApiKeyProvider
+
+  Axytos\ECommerce\Abstractions\UserAgentInfoProviderInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Client\UserAgentInfoProvider
+
+  Axytos\ECommerce\Abstractions\FallbackModeConfigurationInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Client\FallbackModeConfiguration
+
+  Axytos\ECommerce\Abstractions\PaymentMethodConfigurationInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Client\PaymentMethodConfiguration
+
+  Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator:
+  
+  Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider:
+
+  Axytos\ECommerce\Logging\LoggerAdapterInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Logging\LoggerAdapter
+  
+  Axytos\ECommerce\AxytosECommerceClient:
+
+  Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface:
+    class: Axytos\ECommerce\AxytosECommerceClient
+  
+  Axytos\ECommerce\Clients\Checkout\CheckoutClientInterface:
+    class: Axytos\ECommerce\AxytosECommerceClient
+
+  Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface:
+    class: Axytos\ECommerce\AxytosECommerceClient
+
+  Axytos\KaufAufRechnung_OXID6\Subscribers\ShippingSubscriber:
+    class: Axytos\KaufAufRechnung_OXID6\Subscribers\ShippingSubscriber
+    tags: ['kernel.event_subscriber']
+
+  Axytos\KaufAufRechnung_OXID6\Subscribers\InvoiceSubscriber:
+    class: Axytos\KaufAufRechnung_OXID6\Subscribers\InvoiceSubscriber
+    tags: ['kernel.event_subscriber']
+
+  Axytos\KaufAufRechnung_OXID6\Subscribers\CancelSubscriber:
+    class: Axytos\KaufAufRechnung_OXID6\Subscribers\CancelSubscriber
+    tags: ['kernel.event_subscriber']

@@ -12,16 +12,44 @@ use Axytos\KaufAufRechnung_OXID6\DataMapping\CustomerDataDtoFactory;
 use Axytos\KaufAufRechnung_OXID6\DataMapping\DeliveryAddressDtoFactory;
 use Axytos\KaufAufRechnung_OXID6\DataMapping\InvoiceAddressDtoFactory;
 use Axytos\KaufAufRechnung_OXID6\DataMapping\ShippingBasketPositionDtoCollectionFactory;
+use Axytos\KaufAufRechnung_OXID6\ValueCalculation\LogisticianCalculator;
+use Axytos\KaufAufRechnung_OXID6\ValueCalculation\TrackingIdCalculator;
 use OxidEsales\Eshop\Application\Model\Order;
 
 class InvoiceOrderContextFactory
 {
-    private CustomerDataDtoFactory $customerDataDtoFactory;
-    private DeliveryAddressDtoFactory $deliveryAddressDtoFactory;
-    private InvoiceAddressDtoFactory $invoiceAddressDtoFactory;
-    private BasketDtoFactory $basketDtoFactory;
-    private CreateInvoiceBasketDtoFactory $createInvoiceBasketDtoFactory;
-    private ShippingBasketPositionDtoCollectionFactory $shippingBasketPositionDtoCollectionFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\CustomerDataDtoFactory
+     */
+    private $customerDataDtoFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\DeliveryAddressDtoFactory
+     */
+    private $deliveryAddressDtoFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\InvoiceAddressDtoFactory
+     */
+    private $invoiceAddressDtoFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\BasketDtoFactory
+     */
+    private $basketDtoFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceBasketDtoFactory
+     */
+    private $createInvoiceBasketDtoFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\ShippingBasketPositionDtoCollectionFactory
+     */
+    private $shippingBasketPositionDtoCollectionFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\ValueCalculation\TrackingIdCalculator
+     */
+    private $trackingIdCalculator;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\ValueCalculation\LogisticianCalculator
+     */
+    private $logisticianCalculator;
 
     public function __construct(
         CustomerDataDtoFactory $customerDataDtoFactory,
@@ -30,6 +58,8 @@ class InvoiceOrderContextFactory
         BasketDtoFactory $basketDtoFactory,
         CreateInvoiceBasketDtoFactory $createInvoiceBasketDtoFactory,
         ShippingBasketPositionDtoCollectionFactory $shippingBasketPositionDtoCollectionFactory,
+        TrackingIdCalculator $trackingIdCalculator,
+        LogisticianCalculator $logisticianCalculator
     ) {
         $this->customerDataDtoFactory = $customerDataDtoFactory;
         $this->invoiceAddressDtoFactory = $invoiceAddressDtoFactory;
@@ -37,19 +67,16 @@ class InvoiceOrderContextFactory
         $this->basketDtoFactory = $basketDtoFactory;
         $this->createInvoiceBasketDtoFactory = $createInvoiceBasketDtoFactory;
         $this->shippingBasketPositionDtoCollectionFactory = $shippingBasketPositionDtoCollectionFactory;
+        $this->trackingIdCalculator = $trackingIdCalculator;
+        $this->logisticianCalculator = $logisticianCalculator;
     }
 
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     */
     public function getInvoiceOrderContext(
-        Order $order
+        $order
     ): InvoiceOrderContextInterface {
-        return new InvoiceOrderContext(
-            $order,
-            $this->customerDataDtoFactory,
-            $this->invoiceAddressDtoFactory,
-            $this->deliveryAddressDtoFactory,
-            $this->basketDtoFactory,
-            $this->createInvoiceBasketDtoFactory,
-            $this->shippingBasketPositionDtoCollectionFactory,
-        );
+        return new InvoiceOrderContext($order, $this->customerDataDtoFactory, $this->invoiceAddressDtoFactory, $this->deliveryAddressDtoFactory, $this->basketDtoFactory, $this->createInvoiceBasketDtoFactory, $this->shippingBasketPositionDtoCollectionFactory, $this->trackingIdCalculator, $this->logisticianCalculator);
     }
 }

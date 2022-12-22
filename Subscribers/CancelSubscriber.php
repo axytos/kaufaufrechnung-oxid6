@@ -15,10 +15,22 @@ use OxidEsales\EshopCommunity\Internal\Transition\ShopEvents\BeforeModelUpdateEv
 
 class CancelSubscriber extends AbstractShopAwareEventSubscriber
 {
-    private InvoiceClientInterface $invoiceClient;
-    private InvoiceOrderContextFactory $invoiceOrderContextFactory;
-    private PluginConfigurationValidator $pluginConfigurationValidator;
-    private ErrorHandler $errorHandler;
+    /**
+     * @var \Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface
+     */
+    private $invoiceClient;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\Core\InvoiceOrderContextFactory
+     */
+    private $invoiceOrderContextFactory;
+    /**
+     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator
+     */
+    private $pluginConfigurationValidator;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler
+     */
+    private $errorHandler;
 
     public function __construct(
         InvoiceClientInterface $invoiceClient,
@@ -32,7 +44,11 @@ class CancelSubscriber extends AbstractShopAwareEventSubscriber
         $this->errorHandler = $errorHandler;
     }
 
-    public function beforeModelUpdate(BeforeModelUpdateEvent $event): void
+    /**
+     * @param \OxidEsales\EshopCommunity\Internal\Transition\ShopEvents\BeforeModelUpdateEvent $event
+     * @return void
+     */
+    public function beforeModelUpdate($event)
     {
         try {
             if (!($event->getModel() instanceof Order)) {

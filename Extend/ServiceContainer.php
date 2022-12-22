@@ -10,8 +10,9 @@ trait ServiceContainer
      * @template T
      * @psalm-param class-string<T> $serviceName
      * @return T
+     * @param string $serviceName
      */
-    protected function getServiceFromContainer(string $serviceName)
+    protected function getServiceFromContainer($serviceName)
     {
         return ContainerFactory::getInstance()
             ->getContainer()

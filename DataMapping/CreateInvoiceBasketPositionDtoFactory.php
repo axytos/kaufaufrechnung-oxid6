@@ -10,7 +10,10 @@ use OxidEsales\Eshop\Application\Model\OrderArticle;
 
 class CreateInvoiceBasketPositionDtoFactory
 {
-    public function create(OrderArticle $orderArticle): CreateInvoiceBasketPositionDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\OrderArticle $orderArticle
+     */
+    public function create($orderArticle): CreateInvoiceBasketPositionDto
     {
         $position = new CreateInvoiceBasketPositionDto();
         $position->productId = strval($orderArticle->getFieldData("oxartnum"));
@@ -25,7 +28,10 @@ class CreateInvoiceBasketPositionDtoFactory
         return $position;
     }
 
-    public function createShippingPosition(Order $order): CreateInvoiceBasketPositionDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     */
+    public function createShippingPosition($order): CreateInvoiceBasketPositionDto
     {
         $position = new CreateInvoiceBasketPositionDto();
         $position->productId = '0';

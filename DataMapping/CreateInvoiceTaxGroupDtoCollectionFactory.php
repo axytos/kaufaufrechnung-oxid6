@@ -11,14 +11,20 @@ use OxidEsales\Eshop\Core\Model\ListModel;
 
 class CreateInvoiceTaxGroupDtoCollectionFactory
 {
-    private CreateInvoiceTaxGroupDtoFactory $createInvoiceTaxGroupDtoFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceTaxGroupDtoFactory
+     */
+    private $createInvoiceTaxGroupDtoFactory;
 
     public function __construct(CreateInvoiceTaxGroupDtoFactory $createInvoiceTaxGroupDtoFactory)
     {
         $this->createInvoiceTaxGroupDtoFactory = $createInvoiceTaxGroupDtoFactory;
     }
 
-    public function create(Order $order): CreateInvoiceTaxGroupDtoCollection
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     */
+    public function create($order): CreateInvoiceTaxGroupDtoCollection
     {
         /** @var ListModel */
         $orderArticles = $order->getOrderArticles();

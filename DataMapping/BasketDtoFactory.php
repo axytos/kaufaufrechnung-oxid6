@@ -9,7 +9,10 @@ use OxidEsales\Eshop\Application\Model\Order;
 
 class BasketDtoFactory
 {
-    private BasketPositionDtoCollectionFactory $basketPositionDtoCollectionFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\BasketPositionDtoCollectionFactory
+     */
+    private $basketPositionDtoCollectionFactory;
 
     public function __construct(
         BasketPositionDtoCollectionFactory $basketPositionDtoCollectionFactory
@@ -17,7 +20,10 @@ class BasketDtoFactory
         $this->basketPositionDtoCollectionFactory = $basketPositionDtoCollectionFactory;
     }
 
-    public function create(Order $order): BasketDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     */
+    public function create($order): BasketDto
     {
         $basket = new BasketDto();
         $basket->currency = strval($order->getFieldData("oxcurrency"));

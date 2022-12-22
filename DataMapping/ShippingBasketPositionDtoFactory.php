@@ -9,7 +9,10 @@ use OxidEsales\Eshop\Application\Model\OrderArticle;
 
 class ShippingBasketPositionDtoFactory
 {
-    public function create(OrderArticle $shippingItem): ShippingBasketPositionDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\OrderArticle $shippingItem
+     */
+    public function create($shippingItem): ShippingBasketPositionDto
     {
         $position = new ShippingBasketPositionDto();
         $position->productId = strval($shippingItem->getFieldData("oxartnum"));

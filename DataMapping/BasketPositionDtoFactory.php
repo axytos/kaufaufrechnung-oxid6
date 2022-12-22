@@ -10,7 +10,10 @@ use OxidEsales\Eshop\Application\Model\OrderArticle;
 
 class BasketPositionDtoFactory
 {
-    public function create(OrderArticle $orderArticle): BasketPositionDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\OrderArticle $orderArticle
+     */
+    public function create($orderArticle): BasketPositionDto
     {
         $position = new BasketPositionDto();
         $position->productId = strval($orderArticle->getFieldData("oxartnum"));
@@ -25,7 +28,10 @@ class BasketPositionDtoFactory
         return $position;
     }
 
-    public function createShippingPosition(Order $order): BasketPositionDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     */
+    public function createShippingPosition($order): BasketPositionDto
     {
         $position = new BasketPositionDto();
         $position->productId = '0';

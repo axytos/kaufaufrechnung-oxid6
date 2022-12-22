@@ -19,7 +19,10 @@ class PluginConfiguration
         return $this->getSettingsValue('axytos_kaufaufrechnung_api_key');
     }
 
-    public function getClientSecret(): ?string
+    /**
+     * @return string|null
+     */
+    public function getClientSecret()
     {
         return $this->getSettingsValue('axytos_kaufaufrechnung_api_client_secret');
     }

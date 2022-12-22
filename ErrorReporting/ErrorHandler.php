@@ -9,14 +9,21 @@ use Throwable;
 
 class ErrorHandler
 {
-    private ErrorReportingClientInterface $errorReportingClient;
+    /**
+     * @var \Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface
+     */
+    private $errorReportingClient;
 
     public function __construct(ErrorReportingClientInterface $errorReportingClient)
     {
         $this->errorReportingClient = $errorReportingClient;
     }
 
-    public function handle(Throwable $throwable): void
+    /**
+     * @param \Throwable $throwable
+     * @return void
+     */
+    public function handle($throwable)
     {
         $this->errorReportingClient->reportError($throwable);
     }

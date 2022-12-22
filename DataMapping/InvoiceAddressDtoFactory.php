@@ -11,7 +11,10 @@ use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInt
 
 class InvoiceAddressDtoFactory
 {
-    public function create(Order $order): InvoiceAddressDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     */
+    public function create($order): InvoiceAddressDto
     {
         $invoiceAddressDto = new InvoiceAddressDto();
 

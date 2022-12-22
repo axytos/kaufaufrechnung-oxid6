@@ -13,17 +13,20 @@ use Throwable;
 
 class AxytosEvents
 {
-    public const PAYMENT_METHOD_ID = "axytos_kaufaufrechnung";
-    public const PAYMENT_METHOD_DE_DESC = "Kauf auf Rechnung";
-    public const PAYMENT_METHOD_DE_LONG_DESC = "Sie zahlen bequem die Rechnung, sobald Sie die Ware erhalten haben, innerhalb der Zahlfrist";
-    public const PAYMENT_METHOD_EN_DESC = "Buy Now Pay Later";
-    public const PAYMENT_METHOD_EN_LONG_DESC = "You conveniently pay the invoice as soon as you receive the goods, within the payment period";
+    const PAYMENT_METHOD_ID = "axytos_kaufaufrechnung";
+    const PAYMENT_METHOD_DE_DESC = "Kauf auf Rechnung";
+    const PAYMENT_METHOD_DE_LONG_DESC = "Sie zahlen bequem die Rechnung, sobald Sie die Ware erhalten haben, innerhalb der Zahlfrist";
+    const PAYMENT_METHOD_EN_DESC = "Buy Now Pay Later";
+    const PAYMENT_METHOD_EN_LONG_DESC = "You conveniently pay the invoice as soon as you receive the goods, within the payment period";
 
     public function __construct()
     {
     }
 
-    public static function onActivate(): void
+    /**
+     * @return void
+     */
+    public static function onActivate()
     {
         try {
             self::addPaymentMethod();
@@ -34,7 +37,10 @@ class AxytosEvents
         }
     }
 
-    public static function onDeactivate(): void
+    /**
+     * @return void
+     */
+    public static function onDeactivate()
     {
         try {
             self::disablePaymentMethod();
@@ -43,7 +49,10 @@ class AxytosEvents
         }
     }
 
-    private static function executeSQLStatement(string $sqlStatement): void
+    /**
+     * @return void
+     */
+    private static function executeSQLStatement(string $sqlStatement)
     {
         $container = ContainerFactory::getInstance()->getContainer();
         /** @var QueryBuilderFactoryInterface */
@@ -52,21 +61,30 @@ class AxytosEvents
         $queryBuilder->getConnection()->executeStatement($sqlStatement);
     }
 
-    private static function addOrderCheckProcessStatus(): void
+    /**
+     * @return void
+     */
+    private static function addOrderCheckProcessStatus()
     {
         $addFieldSQL = "ALTER TABLE oxorder ADD COLUMN IF NOT EXISTS AXYTOSKAUFAUFRECHNUNGORDERCHECKPROCESSSTATUS VARCHAR(128) DEFAULT 'UNCHECKED'";
 
         self::executeSQLStatement($addFieldSQL);
     }
 
-    private static function addOrderPreCheckResult(): void
+    /**
+     * @return void
+     */
+    private static function addOrderPreCheckResult()
     {
         $addFieldSQL = "ALTER TABLE oxorder ADD COLUMN IF NOT EXISTS AXYTOSKAUFAUFRECHNUNGORDERPRECHECKRESULT TEXT";
 
         self::executeSQLStatement($addFieldSQL);
     }
 
-    private static function addPaymentMethod(): void
+    /**
+     * @return void
+     */
+    private static function addPaymentMethod()
     {
         /**
          * @var DbMetaDataHandler
@@ -125,7 +143,10 @@ class AxytosEvents
         $metaDataHandler->updateViews();
     }
 
-    private static function disablePaymentMethod(): void
+    /**
+     * @return void
+     */
+    private static function disablePaymentMethod()
     {
         /**
          * @var Payment
@@ -140,7 +161,10 @@ class AxytosEvents
         }
     }
 
-    private static function handleError(Throwable $error): void
+    /**
+     * @return void
+     */
+    private static function handleError(Throwable $error)
     {
         $container = ContainerFactory::getInstance()->getContainer();
         /** @var ErrorHandler */

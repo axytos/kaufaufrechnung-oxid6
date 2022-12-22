@@ -10,7 +10,10 @@ use OxidEsales\Eshop\Application\Model\Order;
 
 class CustomerDataDtoFactory
 {
-    public function create(Order $order): CustomerDataDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     */
+    public function create($order): CustomerDataDto
     {
         $user = $order->getOrderUser();
 

@@ -10,33 +10,56 @@ use OxidEsales\Eshop\Core\Field;
 
 class OrderCheckProcessStateMachine
 {
-    public function getState(Order $order): ?string
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return string|null
+     */
+    public function getState($order)
     {
         /** @phpstan-ignore-next-line */
         return $order->oxorder__axytoskaufaufrechnungordercheckprocessstatus->value;
     }
 
-    public function setUnchecked(Order $order): void
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return void
+     */
+    public function setUnchecked($order)
     {
         $this->updateState($order, OrderCheckProcessStates::UNCHECKED);
     }
 
-    public function setChecked(Order $order): void
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return void
+     */
+    public function setChecked($order)
     {
         $this->updateState($order, OrderCheckProcessStates::CHECKED);
     }
 
-    public function setConfirmed(Order $order): void
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return void
+     */
+    public function setConfirmed($order)
     {
         $this->updateState($order, OrderCheckProcessStates::CONFIRMED);
     }
 
-    public function setFailed(Order $order): void
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return void
+     */
+    public function setFailed($order)
     {
         $this->updateState($order, OrderCheckProcessStates::FAILED);
     }
 
-    private function updateState(Order $order, string $orderCheckProcessState): void
+    /**
+     * @return void
+     */
+    private function updateState(Order $order, string $orderCheckProcessState)
     {
         /** @phpstan-ignore-next-line */
         $order->oxorder__axytoskaufaufrechnungordercheckprocessstatus = new Field($orderCheckProcessState);

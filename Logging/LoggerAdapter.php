@@ -8,29 +8,48 @@ use Psr\Log\LoggerInterface;
 
 class LoggerAdapter implements LoggerAdapterInterface
 {
-    private LoggerInterface $logger;
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $logger;
 
     public function __construct()
     {
         $this->logger = Registry::getLogger();
     }
 
-    public function error(string $message): void
+    /**
+     * @param string $message
+     * @return void
+     */
+    public function error($message)
     {
         $this->logger->error($message);
     }
 
-    public function warning(string $message): void
+    /**
+     * @param string $message
+     * @return void
+     */
+    public function warning($message)
     {
         $this->logger->warning($message);
     }
 
-    public function info(string $message): void
+    /**
+     * @param string $message
+     * @return void
+     */
+    public function info($message)
     {
         $this->logger->info($message);
     }
 
-    public function debug(string $message): void
+    /**
+     * @param string $message
+     * @return void
+     */
+    public function debug($message)
     {
         $this->logger->debug($message);
     }

@@ -10,7 +10,10 @@ use OxidEsales\Eshop\Application\Model\OrderArticle;
 
 class CreateInvoiceTaxGroupDtoFactory
 {
-    public function create(OrderArticle $orderArticle): CreateInvoiceTaxGroupDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\OrderArticle $orderArticle
+     */
+    public function create($orderArticle): CreateInvoiceTaxGroupDto
     {
         $taxGroup = new CreateInvoiceTaxGroupDto();
         $taxGroup->total = floatval($orderArticle->getFieldData("oxbrutprice"));
@@ -20,7 +23,10 @@ class CreateInvoiceTaxGroupDtoFactory
         return $taxGroup;
     }
 
-    public function createShippingPosition(Order $order): CreateInvoiceTaxGroupDto
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     */
+    public function createShippingPosition($order): CreateInvoiceTaxGroupDto
     {
         $taxGroup = new CreateInvoiceTaxGroupDto();
         $taxGroup->total = floatval($order->getFieldData("oxdelcost"));

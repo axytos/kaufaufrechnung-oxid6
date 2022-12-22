@@ -9,8 +9,14 @@ use Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider;
 
 class UserAgentInfoProvider implements UserAgentInfoProviderInterface
 {
-    private ComposerPackageInfoProvider $composerPackageInfoProvider;
-    private Oxid6ShopVersionProvider $shopVersionProvider;
+    /**
+     * @var \Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider
+     */
+    private $composerPackageInfoProvider;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\Client\Oxid6ShopVersionProvider
+     */
+    private $shopVersionProvider;
 
     public function __construct(ComposerPackageInfoProvider $composerPackageInfoProvider, Oxid6ShopVersionProvider $shopVersionProvider)
     {

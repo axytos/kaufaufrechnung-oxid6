@@ -10,14 +10,20 @@ use OxidEsales\Eshop\Core\Model\ListModel;
 
 class CreateInvoiceBasketPositionDtoCollectionFactory
 {
-    private CreateInvoiceBasketPositionDtoFactory $createInvoiceBasketPositionDtoFactory;
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceBasketPositionDtoFactory
+     */
+    private $createInvoiceBasketPositionDtoFactory;
 
     public function __construct(CreateInvoiceBasketPositionDtoFactory $createInvoiceBasketPositionDtoFactory)
     {
         $this->createInvoiceBasketPositionDtoFactory = $createInvoiceBasketPositionDtoFactory;
     }
 
-    public function create(Order $order): CreateInvoiceBasketPositionDtoCollection
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     */
+    public function create($order): CreateInvoiceBasketPositionDtoCollection
     {
         /** @var ListModel */
         $orderArticles = $order->getOrderArticles();

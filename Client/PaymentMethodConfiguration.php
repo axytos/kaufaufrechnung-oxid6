@@ -8,22 +8,38 @@ use Axytos\ECommerce\Abstractions\PaymentMethodConfigurationInterface;
 
 class PaymentMethodConfiguration implements PaymentMethodConfigurationInterface
 {
-    public function isIgnored(string $paymentMethodId): bool
+    /**
+     * @param string $paymentMethodId
+     * @return bool
+     */
+    public function isIgnored($paymentMethodId)
     {
         return false;
     }
 
-    public function isSafe(string $paymentMethodId): bool
+    /**
+     * @param string $paymentMethodId
+     * @return bool
+     */
+    public function isSafe($paymentMethodId)
     {
         return false;
     }
 
-    public function isUnsafe(string $paymentMethodId): bool
+    /**
+     * @param string $paymentMethodId
+     * @return bool
+     */
+    public function isUnsafe($paymentMethodId)
     {
         return false;
     }
 
-    public function isNotConfigured(string $paymentMethodId): bool
+    /**
+     * @param string $paymentMethodId
+     * @return bool
+     */
+    public function isNotConfigured($paymentMethodId)
     {
         return true;
     }

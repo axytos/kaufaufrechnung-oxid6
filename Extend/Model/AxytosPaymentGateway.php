@@ -19,16 +19,21 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
 {
     use ServiceContainer;
 
-    /** @phpstan-ignore-next-line */
-    private PluginConfigurationValidator $pluginConfigurationValidator;
-    /** @phpstan-ignore-next-line */
-    private InvoiceClientInterface $invoiceClient;
-    /** @phpstan-ignore-next-line */
-    private ErrorHandler $errorHandler;
-    /** @phpstan-ignore-next-line */
-    private InvoiceOrderContextFactory $invoiceOrderContextFactory;
-    /** @phpstan-ignore-next-line */
-    private OrderCheckProcessStateMachine $orderCheckProcessStateMachine;
+    /** @phpstan-ignore-next-line
+     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator */
+    private $pluginConfigurationValidator;
+    /** @phpstan-ignore-next-line
+     * @var \Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface */
+    private $invoiceClient;
+    /** @phpstan-ignore-next-line
+     * @var \Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler */
+    private $errorHandler;
+    /** @phpstan-ignore-next-line
+     * @var \Axytos\KaufAufRechnung_OXID6\Core\InvoiceOrderContextFactory */
+    private $invoiceOrderContextFactory;
+    /** @phpstan-ignore-next-line
+     * @var \Axytos\KaufAufRechnung_OXID6\Core\OrderCheckProcessStateMachine */
+    private $orderCheckProcessStateMachine;
 
     public function __construct()
     {

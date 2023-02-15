@@ -10,9 +10,9 @@ services:
   Axytos\KaufAufRechnung_OXID6\Client\ApiKeyProvider:
 
   Axytos\KaufAufRechnung_OXID6\Client\PaymentMethodConfiguration:
-  
+
   Axytos\KaufAufRechnung_OXID6\Client\Oxid6ShopVersionProvider:
-  
+
   Axytos\KaufAufRechnung_OXID6\Logging\LoggerAdapter:
 
   Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler:
@@ -63,17 +63,17 @@ services:
     class: Axytos\KaufAufRechnung_OXID6\Client\PaymentMethodConfiguration
 
   Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator:
-  
+
   Axytos\ECommerce\PackageInfo\ComposerPackageInfoProvider:
 
   Axytos\ECommerce\Logging\LoggerAdapterInterface:
     class: Axytos\KaufAufRechnung_OXID6\Logging\LoggerAdapter
-  
+
   Axytos\ECommerce\AxytosECommerceClient:
 
   Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface:
     class: Axytos\ECommerce\AxytosECommerceClient
-  
+
   Axytos\ECommerce\Clients\Checkout\CheckoutClientInterface:
     class: Axytos\ECommerce\AxytosECommerceClient
 
@@ -82,12 +82,18 @@ services:
 
   Axytos\KaufAufRechnung_OXID6\Subscribers\ShippingSubscriber:
     class: Axytos\KaufAufRechnung_OXID6\Subscribers\ShippingSubscriber
-    tags: ['kernel.event_subscriber']
+    tags: ["kernel.event_subscriber"]
 
   Axytos\KaufAufRechnung_OXID6\Subscribers\InvoiceSubscriber:
     class: Axytos\KaufAufRechnung_OXID6\Subscribers\InvoiceSubscriber
-    tags: ['kernel.event_subscriber']
+    tags: ["kernel.event_subscriber"]
 
   Axytos\KaufAufRechnung_OXID6\Subscribers\CancelSubscriber:
     class: Axytos\KaufAufRechnung_OXID6\Subscribers\CancelSubscriber
-    tags: ['kernel.event_subscriber']
+    tags: ["kernel.event_subscriber"]
+
+  Axytos\KaufAufRechnung_OXID6\ValueCalculation\DeliveryWeightCalculator:
+
+  Axytos\KaufAufRechnung_OXID6\ValueCalculation\LogisticianCalculator:
+
+  Axytos\KaufAufRechnung_OXID6\ValueCalculation\TrackingIdCalculator:

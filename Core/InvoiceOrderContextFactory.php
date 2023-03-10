@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Core;
 
 use Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface;
@@ -73,10 +71,11 @@ class InvoiceOrderContextFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return \Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface
      */
     public function getInvoiceOrderContext(
         $order
-    ): InvoiceOrderContextInterface {
+    ) {
         return new InvoiceOrderContext($order, $this->customerDataDtoFactory, $this->invoiceAddressDtoFactory, $this->deliveryAddressDtoFactory, $this->basketDtoFactory, $this->createInvoiceBasketDtoFactory, $this->shippingBasketPositionDtoCollectionFactory, $this->trackingIdCalculator, $this->logisticianCalculator);
     }
 }

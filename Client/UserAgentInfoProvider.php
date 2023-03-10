@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Client;
 
 use Axytos\ECommerce\Abstractions\UserAgentInfoProviderInterface;
@@ -24,12 +22,18 @@ class UserAgentInfoProvider implements UserAgentInfoProviderInterface
         $this->shopVersionProvider = $shopVersionProvider;
     }
 
-    public function getPluginName(): string
+    /**
+     * @return string
+     */
+    public function getPluginName()
     {
         return "KaufAufRechnung";
     }
 
-    public function getPluginVersion(): string
+    /**
+     * @return string
+     */
+    public function getPluginVersion()
     {
         $packageName = 'axytos/kaufaufrechnung-oxid6';
 
@@ -37,12 +41,18 @@ class UserAgentInfoProvider implements UserAgentInfoProviderInterface
         return $this->composerPackageInfoProvider->getVersion($packageName);
     }
 
-    public function getShopSystemName(): string
+    /**
+     * @return string
+     */
+    public function getShopSystemName()
     {
         return "OXID-eShop";
     }
 
-    public function getShopSystemVersion(): string
+    /**
+     * @return string
+     */
+    public function getShopSystemVersion()
     {
         return $this->shopVersionProvider->getVersion();
     }

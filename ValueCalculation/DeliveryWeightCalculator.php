@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\ValueCalculation;
 
 use OxidEsales\Eshop\Core\Model\ListModel;
@@ -11,8 +9,9 @@ class DeliveryWeightCalculator
 {
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return float
      */
-    public function calculate($order): float
+    public function calculate($order)
     {
         /** @var ListModel */
         $orderArticleList = $order->getOrderArticles();

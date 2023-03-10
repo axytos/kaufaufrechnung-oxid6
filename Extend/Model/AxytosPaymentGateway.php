@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Extend\Model;
 
 use Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface;
@@ -44,7 +42,7 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
         $this->orderCheckProcessStateMachine = $this->getServiceFromContainer(OrderCheckProcessStateMachine::class);
     }
 
-    public function executePayment($amount, &$oOrder): bool
+    public function executePayment($amount, &$oOrder)
     {
         /** @var Order */
         $order = $oOrder;
@@ -88,6 +86,11 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
                 return $success;
             }
         } catch (\Throwable $th) {
+            $this->orderCheckProcessStateMachine->setFailed($order);
+            $this->errorHandler->handle($th);
+            $order->delete();
+            return false;
+        } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
             $this->orderCheckProcessStateMachine->setFailed($order);
             $this->errorHandler->handle($th);
             $order->delete();

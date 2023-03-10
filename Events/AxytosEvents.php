@@ -34,6 +34,8 @@ class AxytosEvents
             self::addOrderPreCheckResult();
         } catch (\Throwable $th) {
             self::handleError($th);
+        } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
+            self::handleError($th);
         }
     }
 
@@ -46,14 +48,18 @@ class AxytosEvents
             self::disablePaymentMethod();
         } catch (\Throwable $th) {
             self::handleError($th);
+        } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
+            self::handleError($th);
         }
     }
 
     /**
      * @return void
+     * @param string $sqlStatement
      */
-    private static function executeSQLStatement(string $sqlStatement)
+    private static function executeSQLStatement($sqlStatement)
     {
+        $sqlStatement = (string) $sqlStatement;
         $container = ContainerFactory::getInstance()->getContainer();
         /** @var QueryBuilderFactoryInterface */
         $queryBuilderFactory = $container->get(QueryBuilderFactoryInterface::class);
@@ -163,8 +169,9 @@ class AxytosEvents
 
     /**
      * @return void
+     * @param \Throwable $error
      */
-    private static function handleError(Throwable $error)
+    private static function handleError($error)
     {
         $container = ContainerFactory::getInstance()->getContainer();
         /** @var ErrorHandler */

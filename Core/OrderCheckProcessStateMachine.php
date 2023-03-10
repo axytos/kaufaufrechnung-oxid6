@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Core;
 
 use Axytos\ECommerce\Order\OrderCheckProcessStates;
@@ -58,9 +56,11 @@ class OrderCheckProcessStateMachine
 
     /**
      * @return void
+     * @param string $orderCheckProcessState
      */
-    private function updateState(Order $order, string $orderCheckProcessState)
+    private function updateState(Order $order, $orderCheckProcessState)
     {
+        $orderCheckProcessState = (string) $orderCheckProcessState;
         /** @phpstan-ignore-next-line */
         $order->oxorder__axytoskaufaufrechnungordercheckprocessstatus = new Field($orderCheckProcessState);
         /** @phpstan-ignore-next-line */

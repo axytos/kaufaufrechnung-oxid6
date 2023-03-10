@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Client;
 
 use Axytos\ECommerce\Abstractions\ApiHostProviderInterface;
@@ -19,7 +17,10 @@ class ApiHostProvider implements ApiHostProviderInterface
         $this->pluginConfig = $pluginConfig;
     }
 
-    public function getApiHost(): string
+    /**
+     * @return string
+     */
+    public function getApiHost()
     {
         return $this->pluginConfig->getApiHost();
     }

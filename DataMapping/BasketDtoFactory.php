@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\BasketDto;
@@ -22,8 +20,9 @@ class BasketDtoFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\BasketDto
      */
-    public function create($order): BasketDto
+    public function create($order)
     {
         $basket = new BasketDto();
         $basket->currency = strval($order->getFieldData("oxcurrency"));

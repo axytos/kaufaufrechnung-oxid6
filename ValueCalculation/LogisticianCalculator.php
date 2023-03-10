@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\ValueCalculation;
 
 use OxidEsales\Eshop\Application\Model\Order;
@@ -12,8 +10,9 @@ class LogisticianCalculator
 {
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return string
      */
-    public function calculate($order): string
+    public function calculate($order)
     {
         /** @phpstan-ignore-next-line */
         $countryQueryBuilder = ContainerFactory::getInstance()

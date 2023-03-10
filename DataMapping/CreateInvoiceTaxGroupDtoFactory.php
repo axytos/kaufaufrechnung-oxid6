@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto;
@@ -12,8 +10,9 @@ class CreateInvoiceTaxGroupDtoFactory
 {
     /**
      * @param \OxidEsales\Eshop\Application\Model\OrderArticle $orderArticle
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto
      */
-    public function create($orderArticle): CreateInvoiceTaxGroupDto
+    public function create($orderArticle)
     {
         $taxGroup = new CreateInvoiceTaxGroupDto();
         $taxGroup->total = floatval($orderArticle->getFieldData("oxbrutprice"));
@@ -25,8 +24,9 @@ class CreateInvoiceTaxGroupDtoFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto
      */
-    public function createShippingPosition($order): CreateInvoiceTaxGroupDto
+    public function createShippingPosition($order)
     {
         $taxGroup = new CreateInvoiceTaxGroupDto();
         $taxGroup->total = floatval($order->getFieldData("oxdelcost"));

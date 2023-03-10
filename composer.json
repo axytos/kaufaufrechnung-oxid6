@@ -16,8 +16,8 @@
     ],
     "license": "proprietary",
     "require": {
-        "php": ">=7.0.0",
-        "axytos/ecommerce-sdk": "1.4.2"
+        "php": ">=5.6.0",
+        "axytos/ecommerce-sdk": "1.4.3"
     },
     "autoload": {
         "psr-4": {

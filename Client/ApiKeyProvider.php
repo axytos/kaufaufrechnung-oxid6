@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Client;
 
 use Axytos\ECommerce\Abstractions\ApiKeyProviderInterface;
@@ -19,7 +17,10 @@ class ApiKeyProvider implements ApiKeyProviderInterface
         $this->pluginConfig = $pluginConfig;
     }
 
-    public function getApiKey(): string
+    /**
+     * @return string
+     */
+    public function getApiKey()
     {
         return $this->pluginConfig->getApiKey();
     }

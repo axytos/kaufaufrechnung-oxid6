@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\CustomerDataDto;
@@ -12,8 +10,9 @@ class CustomerDataDtoFactory
 {
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\CustomerDataDto
      */
-    public function create($order): CustomerDataDto
+    public function create($order)
     {
         $user = $order->getOrderUser();
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\CreateInvoiceBasketPositionDtoCollection;
@@ -22,8 +20,9 @@ class CreateInvoiceBasketPositionDtoCollectionFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceBasketPositionDtoCollection
      */
-    public function create($order): CreateInvoiceBasketPositionDtoCollection
+    public function create($order)
     {
         /** @var ListModel */
         $orderArticles = $order->getOrderArticles();

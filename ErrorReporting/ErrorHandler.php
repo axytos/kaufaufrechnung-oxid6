@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\ErrorReporting;
 
 use Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface;

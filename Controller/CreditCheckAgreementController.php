@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Controller;
 
 use Axytos\ECommerce\Clients\Checkout\CheckoutClientInterface;
@@ -13,7 +11,10 @@ class CreditCheckAgreementController extends FrontendController
 {
     protected $_sThisTemplate = "credit_check_agreement.tpl";
 
-    public function getCreditCheckAgreement(): string
+    /**
+     * @return string
+     */
+    public function getCreditCheckAgreement()
     {
         try {
             /** @var CheckoutClientInterface */
@@ -22,6 +23,13 @@ class CreditCheckAgreementController extends FrontendController
                 ->get(CheckoutClientInterface::class);
             return $checkoutClient->getCreditCheckAgreementInfo();
         } catch (\Throwable $th) {
+            /** @var ErrorHandler */
+            $errorHandler =  ContainerFactory::getInstance()
+                ->getContainer()
+                ->get(ErrorHandler::class);
+            $errorHandler->handle($th);
+            return '';
+        } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
             /** @var ErrorHandler */
             $errorHandler =  ContainerFactory::getInstance()
                 ->getContainer()

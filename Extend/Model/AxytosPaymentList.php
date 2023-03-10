@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Extend\Model;
 
 use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
@@ -33,6 +31,20 @@ class AxytosPaymentList extends AxytosPaymentList_parent
                 // retry, error might not originate from parent
                 return parent::getPaymentList($sShipSetId, $dPrice, $oUser);
             } catch (\Throwable $th) {
+                return [];
+            } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
+                return [];
+            }
+        } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
+            /** @var ErrorHandler */
+            $errorHandler = $this->getServiceFromContainer(ErrorHandler::class);
+            $errorHandler->handle($th);
+            try {
+                // retry, error might not originate from parent
+                return parent::getPaymentList($sShipSetId, $dPrice, $oUser);
+            } catch (\Throwable $th) {
+                return [];
+            } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
                 return [];
             }
         }

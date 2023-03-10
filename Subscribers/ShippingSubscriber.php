@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Subscribers;
 
 use Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface;
@@ -87,6 +85,8 @@ class ShippingSubscriber extends AbstractShopAwareEventSubscriber
             $this->invoiceClient->reportShipping($context);
             $this->invoiceClient->trackingInformation($context);
         } catch (\Throwable $th) {
+            $this->errorHandler->handle($th);
+        } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
             $this->errorHandler->handle($th);
         }
     }

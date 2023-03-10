@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\Configuration;
 
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
@@ -9,12 +7,18 @@ use OxidEsales\EshopCommunity\Internal\Framework\Module\Configuration\Bridge\Mod
 
 class PluginConfiguration
 {
-    public function getApiHost(): string
+    /**
+     * @return string
+     */
+    public function getApiHost()
     {
         return $this->getSettingsValue('axytos_kaufaufrechnung_api_host');
     }
 
-    public function getApiKey(): string
+    /**
+     * @return string
+     */
+    public function getApiKey()
     {
         return $this->getSettingsValue('axytos_kaufaufrechnung_api_key');
     }
@@ -29,9 +33,11 @@ class PluginConfiguration
 
     /**
      * @return string
+     * @param string $settingName
      */
-    private function getSettingsValue(string $settingName)
+    private function getSettingsValue($settingName)
     {
+        $settingName = (string) $settingName;
         $moduleId = 'axytos_kaufaufrechnung';
 
         /** @var ModuleSettingBridgeInterface */

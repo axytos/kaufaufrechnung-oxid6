@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\InvoiceAddressDto;
@@ -13,8 +11,9 @@ class InvoiceAddressDtoFactory
 {
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\InvoiceAddressDto
      */
-    public function create($order): InvoiceAddressDto
+    public function create($order)
     {
         $invoiceAddressDto = new InvoiceAddressDto();
 

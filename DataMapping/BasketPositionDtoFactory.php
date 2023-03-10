@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\BasketPositionDto;
@@ -12,8 +10,9 @@ class BasketPositionDtoFactory
 {
     /**
      * @param \OxidEsales\Eshop\Application\Model\OrderArticle $orderArticle
+     * @return \Axytos\ECommerce\DataTransferObjects\BasketPositionDto
      */
-    public function create($orderArticle): BasketPositionDto
+    public function create($orderArticle)
     {
         $position = new BasketPositionDto();
         $position->productId = strval($orderArticle->getFieldData("oxartnum"));
@@ -30,8 +29,9 @@ class BasketPositionDtoFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @return \Axytos\ECommerce\DataTransferObjects\BasketPositionDto
      */
-    public function createShippingPosition($order): BasketPositionDto
+    public function createShippingPosition($order)
     {
         $position = new BasketPositionDto();
         $position->productId = '0';

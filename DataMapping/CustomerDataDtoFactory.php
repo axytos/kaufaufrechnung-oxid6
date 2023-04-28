@@ -17,7 +17,8 @@ class CustomerDataDtoFactory
         $user = $order->getOrderUser();
 
         $personalDataDto = new CustomerDataDto();
-        $personalDataDto->externalCustomerId = $user->getId();
+        /** @phpstan-ignore-next-line */
+        $personalDataDto->externalCustomerId = $user->getFieldData('oxcustnr');
         if ($user->getFieldData("oxbirthdate") !== "0000-00-00") {
             /** @phpstan-ignore-next-line */
             $personalDataDto->dateOfBirth = DateTimeImmutable::createFromFormat('Y-m-d G:i:s', $user->getFieldData("oxbirthdate") . " 00:00:00");

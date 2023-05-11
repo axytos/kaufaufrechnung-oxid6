@@ -20,17 +20,15 @@ class LogisticianCalculator
             ->get(QueryBuilderFactoryInterface::class)
             ->create();
 
-        $countryQueryBuilder->select('oxobject2delivery.oxobjectid')
-            ->from('oxobject2delivery')
-            ->where('(oxdeliveryid = :oxdeliveryid) AND (oxtype = :rdfadeliveryset)')
+        $countryQueryBuilder->select('oxdeliveryset.oxtitle')
+            ->from('oxdeliveryset')
+            ->where('oxid = :oxdeliveryid')
             ->setParameters([
                 ':oxdeliveryid' => $order->getFieldData("oxdeltype"),
-                ':rdfadeliveryset' => "rdfadeliveryset"
             ]);
 
         $value = $countryQueryBuilder->execute()->fetchOne();
 
-        /** @phpstan-ignore-next-line */
-        return strval($value) ?: "";
+        return strval($value) !== '' ? strval($value) : "";
     }
 }

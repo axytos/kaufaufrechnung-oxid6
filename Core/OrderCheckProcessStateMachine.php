@@ -63,7 +63,6 @@ class OrderCheckProcessStateMachine
         $orderCheckProcessState = (string) $orderCheckProcessState;
         /** @phpstan-ignore-next-line */
         $order->oxorder__axytoskaufaufrechnungordercheckprocessstatus = new Field($orderCheckProcessState);
-        /** @phpstan-ignore-next-line */
         $order->save();
     }
 }

@@ -20,21 +20,22 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
     /** @phpstan-ignore-next-line
      * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator */
     private $pluginConfigurationValidator;
-    /** @phpstan-ignore-next-line
+    /**
      * @var \Axytos\ECommerce\Clients\Invoice\InvoiceClientInterface */
     private $invoiceClient;
-    /** @phpstan-ignore-next-line
+    /**
      * @var \Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler */
     private $errorHandler;
-    /** @phpstan-ignore-next-line
+    /**
      * @var \Axytos\KaufAufRechnung_OXID6\Core\InvoiceOrderContextFactory */
     private $invoiceOrderContextFactory;
-    /** @phpstan-ignore-next-line
+    /**
      * @var \Axytos\KaufAufRechnung_OXID6\Core\OrderCheckProcessStateMachine */
     private $orderCheckProcessStateMachine;
 
     public function __construct()
     {
+        parent::__construct();
         $this->pluginConfigurationValidator = $this->getServiceFromContainer(PluginConfigurationValidator::class);
         $this->invoiceClient = $this->getServiceFromContainer(InvoiceClientInterface::class);
         $this->errorHandler = $this->getServiceFromContainer(ErrorHandler::class);
@@ -58,7 +59,7 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
         }
 
         try {
-            /** @var Order */
+            /** @var AxytosOrder */
             $order = $oOrder;
 
             // add pre-check code here
@@ -69,12 +70,13 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
             if ($shopAction === ShopActions::CHANGE_PAYMENT_METHOD) {
                 $config = Registry::getConfig();
                 $utils = Registry::getUtils();
-                $this->orderCheckProcessStateMachine->setFailed($order);
                 $order->delete();
                 $session->setVariable($sessionVariableKey, $shopAction);
                 $utils->redirect($config->getSslShopUrl() . 'index.php?cl=payment&' . AxytosEvents::PAYMENT_METHOD_ID . '_error_id=' . ShopActions::CHANGE_PAYMENT_METHOD, false);
                 return false;
             } else {
+                $order->initializeOrderNumber();
+
                 $this->orderCheckProcessStateMachine->setChecked($order);
 
                 $this->invoiceClient->confirmOrder($invoiceOrderContext);

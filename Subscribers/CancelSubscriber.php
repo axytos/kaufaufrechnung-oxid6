@@ -70,7 +70,7 @@ class CancelSubscriber extends AbstractShopAwareEventSubscriber
             $order_id = $model->getId();
 
             /** @var Order */
-            $order = oxNew(Order::class); // @phpstan-ignore-line
+            $order = oxNew(Order::class);
             $order->load($order_id);
 
             if ($model->getFieldData("oxstorno") === intval($order->getFieldData("oxstorno"))) {

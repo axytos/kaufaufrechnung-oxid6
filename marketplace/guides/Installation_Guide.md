@@ -36,6 +36,13 @@ Während des Onboarding erhalten Sie die notwendigen Verbindungsdaten, um das Mo
 
 ## Modul-Installation
 
+Zuerst muss der Code des Moduls heruntergeladen und auf dem Server installiert werden. Befolgen Sie dazu die offizielle
+Anleitung auf der OXID-6 Website:
+https://docs.oxid-esales.com/developer/en/latest/development/modules_components_themes/module/installation_setup/installation.html
+
+Nachdem das Modul erfolgreich installiert wurde, kann es nun aktiviert werden. Dies erfolgt über die
+Administrations-Oberfläche von Oxid.
+
 1. Zur Administration Ihrer Oxid Distribution wechseln. Nach Installation ist das Modul unter _Erweiterungen > Module_ aufgeführt.
 
 2. Unter _Stamm_ __Aktivieren__ ausführen.

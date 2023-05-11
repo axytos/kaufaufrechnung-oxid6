@@ -65,7 +65,7 @@ class ShippingSubscriber extends AbstractShopAwareEventSubscriber
 
             if (
                 $model->getFieldData("oxsenddate") === "0000-00-00 00:00:00" ||
-                empty($model->getFieldData("oxsenddate")) ||
+                strval($model->getFieldData("oxsenddate")) === '' ||
                 $model->getFieldData("oxsenddate") === "-"
             ) {
                 return;
@@ -74,7 +74,7 @@ class ShippingSubscriber extends AbstractShopAwareEventSubscriber
             $order_id = $model->getId();
 
             /** @var Order */
-            $order = oxNew(Order::class); // @phpstan-ignore-line
+            $order = oxNew(Order::class);
             $order->load($order_id);
 
             if ($model->getFieldData("oxsenddate") === $order->getFieldData("oxsenddate")) {

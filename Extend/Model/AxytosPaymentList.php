@@ -11,6 +11,9 @@ class AxytosPaymentList extends AxytosPaymentList_parent
 {
     use ServiceContainer;
 
+    /**
+     * @return array<\OxidEsales\Eshop\Application\Model\Payment>
+     */
     public function getPaymentList($sShipSetId, $dPrice, $oUser = null)
     {
         try {
@@ -44,7 +47,7 @@ class AxytosPaymentList extends AxytosPaymentList_parent
                 return parent::getPaymentList($sShipSetId, $dPrice, $oUser);
             } catch (\Throwable $th) {
                 return [];
-            } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
+            } catch (\Exception $th) {
                 return [];
             }
         }

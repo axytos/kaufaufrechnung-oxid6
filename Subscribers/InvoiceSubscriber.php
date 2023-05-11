@@ -66,10 +66,10 @@ class InvoiceSubscriber extends AbstractShopAwareEventSubscriber
             $order_id = $model->getId();
 
             /** @var Order */
-            $order = oxNew(Order::class); // @phpstan-ignore-line
+            $order = oxNew(Order::class);
             $order->load($order_id);
 
-            if (empty($model->getFieldData("oxbillnr")) && empty($order->getFieldData("oxbillnr"))) {
+            if (strval($model->getFieldData("oxbillnr")) === '' && strval($order->getFieldData("oxbillnr")) === '') {
                 return;
             }
 

@@ -29,9 +29,9 @@ class AxytosEvents
     public static function onActivate()
     {
         try {
+            self::createOrderColumns();
             self::addPaymentMethod();
-            self::addOrderCheckProcessStatus();
-            self::addOrderPreCheckResult();
+            self::clearTmp();
         } catch (\Throwable $th) {
             self::handleError($th);
         } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
@@ -46,6 +46,7 @@ class AxytosEvents
     {
         try {
             self::disablePaymentMethod();
+            self::clearTmp();
         } catch (\Throwable $th) {
             self::handleError($th);
         } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
@@ -55,16 +56,11 @@ class AxytosEvents
 
     /**
      * @return void
-     * @param string $sqlStatement
      */
-    private static function executeSQLStatement($sqlStatement)
+    private static function createOrderColumns()
     {
-        $sqlStatement = (string) $sqlStatement;
-        $container = ContainerFactory::getInstance()->getContainer();
-        /** @var QueryBuilderFactoryInterface */
-        $queryBuilderFactory = $container->get(QueryBuilderFactoryInterface::class);
-        $queryBuilder = $queryBuilderFactory->create();
-        $queryBuilder->getConnection()->executeStatement($sqlStatement);
+        self::addOrderCheckProcessStatus();
+        self::addOrderPreCheckResult();
     }
 
     /**
@@ -72,9 +68,11 @@ class AxytosEvents
      */
     private static function addOrderCheckProcessStatus()
     {
-        $addFieldSQL = "ALTER TABLE oxorder ADD COLUMN IF NOT EXISTS AXYTOSKAUFAUFRECHNUNGORDERCHECKPROCESSSTATUS VARCHAR(128) DEFAULT 'UNCHECKED'";
-
-        self::executeSQLStatement($addFieldSQL);
+        self::addTableColumn(
+            "oxorder",
+            "AXYTOSKAUFAUFRECHNUNGORDERCHECKPROCESSSTATUS",
+            "VARCHAR(128) DEFAULT 'UNCHECKED'"
+        );
     }
 
     /**
@@ -82,9 +80,28 @@ class AxytosEvents
      */
     private static function addOrderPreCheckResult()
     {
-        $addFieldSQL = "ALTER TABLE oxorder ADD COLUMN IF NOT EXISTS AXYTOSKAUFAUFRECHNUNGORDERPRECHECKRESULT TEXT";
+        self::addTableColumn(
+            "oxorder",
+            "AXYTOSKAUFAUFRECHNUNGORDERPRECHECKRESULT",
+            "TEXT"
+        );
+    }
 
-        self::executeSQLStatement($addFieldSQL);
+    /**
+     * @return void
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $definition
+     */
+    private static function addTableColumn($tableName, $columnName, $definition)
+    {
+        $statement = "ALTER TABLE $tableName ADD COLUMN IF NOT EXISTS $columnName $definition";
+
+        $container = ContainerFactory::getInstance()->getContainer();
+        /** @var QueryBuilderFactoryInterface */
+        $queryBuilderFactory = $container->get(QueryBuilderFactoryInterface::class);
+        $queryBuilder = $queryBuilderFactory->create();
+        $queryBuilder->getConnection()->executeStatement($statement);
     }
 
     /**
@@ -92,18 +109,11 @@ class AxytosEvents
      */
     private static function addPaymentMethod()
     {
-        /**
-         * @var DbMetaDataHandler
-         * @phpstan-ignore-next-line
-         */
+        /** @var DbMetaDataHandler */
         $metaDataHandler = oxNew(DbMetaDataHandler::class);
 
-        /**
-         * @var Payment
-         * @phpstan-ignore-next-line
-         */
+        /** @var Payment */
         $payment = oxNew(Payment::class);
-
         if ($payment->load(self::PAYMENT_METHOD_ID)) {
             /** @phpstan-ignore-next-line */
             $payment->oxpayments__oxactive = new Field(1);
@@ -125,22 +135,18 @@ class AxytosEvents
 
             $languages = Registry::getLang()->getAllShopLanguageIds();
 
-            if (in_array("de", $languages)) {
-                $lang = strval(array_search("de", $languages));
+            if (in_array("de", $languages, true)) {
+                $lang = strval(array_search("de", $languages, true));
                 $payment->setLanguage($lang);
-                /** @phpstan-ignore-next-line */
                 $payment->oxpayments__oxdesc = new Field(self::PAYMENT_METHOD_DE_DESC);
-                /** @phpstan-ignore-next-line */
                 $payment->oxpayments__oxlongdesc = new Field(self::PAYMENT_METHOD_DE_LONG_DESC);
                 $payment->save();
             }
 
-            if (in_array("en", $languages)) {
-                $lang = strval(array_search("en", $languages));
+            if (in_array("en", $languages, true)) {
+                $lang = strval(array_search("en", $languages, true));
                 $payment->setLanguage($lang);
-                /** @phpstan-ignore-next-line */
                 $payment->oxpayments__oxdesc = new Field(self::PAYMENT_METHOD_EN_DESC);
-                /** @phpstan-ignore-next-line */
                 $payment->oxpayments__oxlongdesc = new Field(self::PAYMENT_METHOD_EN_LONG_DESC);
                 $payment->save();
             }
@@ -156,7 +162,6 @@ class AxytosEvents
     {
         /**
          * @var Payment
-         * @phpstan-ignore-next-line
          */
         $payment = oxNew(Payment::class);
         if ($payment->load(self::PAYMENT_METHOD_ID)) {
@@ -164,6 +169,24 @@ class AxytosEvents
             $payment->oxpayments__oxactive = new Field(0);
 
             $payment->save();
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private static function clearTmp()
+    {
+        $sTmpDir = getShopBasePath() . "/tmp/";
+        $sSmartyDir = $sTmpDir . "smarty/";
+
+        /** @phpstan-ignore-next-line */
+        foreach (glob($sTmpDir . "*.txt") as $sFileName) {
+            unlink($sFileName);
+        }
+        /** @phpstan-ignore-next-line */
+        foreach (glob($sSmartyDir . "*.php") as $sFileName) {
+            unlink($sFileName);
         }
     }
 

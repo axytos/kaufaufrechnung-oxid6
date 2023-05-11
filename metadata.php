@@ -6,9 +6,11 @@
 
 use Axytos\KaufAufRechnung_OXID6\Controller\CreditCheckAgreementController;
 use Axytos\KaufAufRechnung_OXID6\Events\AxytosEvents;
+use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosOrder;
 use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosPayment;
 use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosPaymentList;
 use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosPaymentGateway;
+use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\PaymentGateway;
 use OxidEsales\Eshop\Application\Model\PaymentList;
@@ -29,14 +31,15 @@ $aModule = array(
         "en" => "You conveniently pay the invoice as soon as you receive the goods, within the payment period",
     ],
     "thumbnail"   => "assets/img/logo.png",
-    "version"     => "1.4.6",
+    "version"     => "1.4.7",
     "author"      => "axytos GmbH",
     "url"         => "https://www.axytos.com",
     "email"       => "info@axytos.com",
     "extend"      => [
-        PaymentList::class       => AxytosPaymentList::class,
-        PaymentGateway::class    => AxytosPaymentGateway::class,
-        Payment::class           => AxytosPayment::class,
+        PaymentList::class      => AxytosPaymentList::class,
+        PaymentGateway::class   => AxytosPaymentGateway::class,
+        Payment::class          => AxytosPayment::class,
+        Order::class            => AxytosOrder::class,
     ],
     "events"      => [
         "onActivate"   => AxytosEvents::class . "::onActivate",

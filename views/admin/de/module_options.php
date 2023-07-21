@@ -8,4 +8,5 @@ $aLang = array(
     "SHOP_MODULE_axytos_kaufaufrechnung_api_host"       => "API Host",
     "SHOP_MODULE_axytos_kaufaufrechnung_api_key"        => "API Key",
     "SHOP_MODULE_axytos_kaufaufrechnung_client_secret"  => "Client Secret",
+    "SHOP_MODULE_axytos_kaufaufrechnung_error_message"  => "Fehlermeldung bei Ablehnung (Standardtext: Aktuell ist die Zahlungsoption Kauf auf Rechnung nicht möglich.)",
 );

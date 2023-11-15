@@ -8,8 +8,11 @@ use Axytos\KaufAufRechnung_OXID6\Core\InvoiceOrderContextFactory;
 use Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler;
 use Axytos\KaufAufRechnung_OXID6\Events\AxytosEvents;
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\UtilsDate;
 use OxidEsales\EshopCommunity\Internal\Framework\Event\AbstractShopAwareEventSubscriber;
 use OxidEsales\EshopCommunity\Internal\Transition\ShopEvents\BeforeModelUpdateEvent;
+use oxregistry;
 
 class ShippingSubscriber extends AbstractShopAwareEventSubscriber
 {
@@ -63,10 +66,16 @@ class ShippingSubscriber extends AbstractShopAwareEventSubscriber
                 return;
             }
 
+            /** @var UtilsDate */
+            $dateUtils = Registry::get(UtilsDate::class);
+
+            /** @var string */
+            $newSendDate = $model->getFieldData("oxsenddate");
+            $newSendDate = $dateUtils->formatDBDate($newSendDate, true);
             if (
-                $model->getFieldData("oxsenddate") === "0000-00-00 00:00:00" ||
-                strval($model->getFieldData("oxsenddate")) === '' ||
-                $model->getFieldData("oxsenddate") === "-"
+                $newSendDate === "0000-00-00 00:00:00" ||
+                strval($newSendDate) === '' ||
+                $newSendDate === "-"
             ) {
                 return;
             }
@@ -77,7 +86,10 @@ class ShippingSubscriber extends AbstractShopAwareEventSubscriber
             $order = oxNew(Order::class);
             $order->load($order_id);
 
-            if ($model->getFieldData("oxsenddate") === $order->getFieldData("oxsenddate")) {
+            /** @var string */
+            $oldSendDate = $order->getFieldData("oxsenddate");
+            $oldSendDate = $dateUtils->formatDBDate($oldSendDate, true);
+            if ($newSendDate === $oldSendDate) {
                 return;
             }
 

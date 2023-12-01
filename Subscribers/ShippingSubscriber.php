@@ -12,7 +12,6 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\UtilsDate;
 use OxidEsales\EshopCommunity\Internal\Framework\Event\AbstractShopAwareEventSubscriber;
 use OxidEsales\EshopCommunity\Internal\Transition\ShopEvents\BeforeModelUpdateEvent;
-use oxregistry;
 
 class ShippingSubscriber extends AbstractShopAwareEventSubscriber
 {

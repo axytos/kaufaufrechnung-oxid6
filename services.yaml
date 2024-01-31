@@ -97,3 +97,5 @@ services:
   Axytos\KaufAufRechnung_OXID6\ValueCalculation\LogisticianCalculator:
 
   Axytos\KaufAufRechnung_OXID6\ValueCalculation\TrackingIdCalculator:
+
+  Axytos\KaufAufRechnung_OXID6\ValueCalculation\ShippingCostCalculator:

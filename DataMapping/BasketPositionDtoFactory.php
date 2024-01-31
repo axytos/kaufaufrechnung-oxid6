@@ -3,11 +3,21 @@
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\BasketPositionDto;
-use OxidEsales\Eshop\Application\Model\Order;
-use OxidEsales\Eshop\Application\Model\OrderArticle;
+use Axytos\KaufAufRechnung_OXID6\ValueCalculation\ShippingCostCalculator;
 
 class BasketPositionDtoFactory
 {
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\ValueCalculation\ShippingCostCalculator
+     */
+    private $shippingCostCalculator;
+
+    public function __construct(
+        ShippingCostCalculator $shippingCostCalculator
+    ) {
+        $this->shippingCostCalculator = $shippingCostCalculator;
+    }
+
     /**
      * @param \OxidEsales\Eshop\Application\Model\OrderArticle $orderArticle
      * @return \Axytos\ECommerce\DataTransferObjects\BasketPositionDto
@@ -41,7 +51,7 @@ class BasketPositionDtoFactory
         $position->productName = 'Shipping';
         $position->quantity = 1;
         $position->grossPositionTotal = $grossDeliveryCosts;
-        $position->netPositionTotal = round($grossDeliveryCosts * (1 - $deliveryTax / 100), 2);
+        $position->netPositionTotal = $this->shippingCostCalculator->calculateNetPrice($grossDeliveryCosts, $deliveryTax);
         $position->taxPercent = $deliveryTax;
         $position->netPricePerUnit = $position->netPositionTotal;
         $position->grossPricePerUnit = $position->grossPositionTotal;

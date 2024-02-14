@@ -24,9 +24,12 @@ class CreateInvoiceTaxGroupDtoFactory
      */
     public function create($orderArticle)
     {
+        $brutPrice = floatval($orderArticle->getFieldData("oxbrutprice"));
+        $netPrice = floatval($orderArticle->getFieldData("oxnetprice"));
+
         $taxGroup = new CreateInvoiceTaxGroupDto();
-        $taxGroup->total = floatval($orderArticle->getFieldData("oxbrutprice"));
-        $taxGroup->valueToTax = floatval($orderArticle->getFieldData("oxnetprice"));
+        $taxGroup->valueToTax = $netPrice;
+        $taxGroup->total = round($brutPrice - $netPrice, 2);
         $taxGroup->taxPercent = floatval($orderArticle->getFieldData("oxvat"));
 
         return $taxGroup;
@@ -42,8 +45,8 @@ class CreateInvoiceTaxGroupDtoFactory
         $deliveryTax = floatval($order->getFieldData("oxdelvat"));
 
         $taxGroup = new CreateInvoiceTaxGroupDto();
-        $taxGroup->total = $grossDeliveryCosts;
         $taxGroup->valueToTax = $this->shippingCostCalculator->calculateNetPrice($grossDeliveryCosts, $deliveryTax);
+        $taxGroup->total = round($grossDeliveryCosts - $taxGroup->valueToTax, 2);
         $taxGroup->taxPercent = $deliveryTax;
 
         return $taxGroup;

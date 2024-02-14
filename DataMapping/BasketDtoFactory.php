@@ -3,7 +3,7 @@
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\BasketDto;
-use OxidEsales\Eshop\Application\Model\Order;
+use Axytos\KaufAufRechnung_OXID6\ValueCalculation\ShippingCostCalculator;
 
 class BasketDtoFactory
 {
@@ -12,10 +12,17 @@ class BasketDtoFactory
      */
     private $basketPositionDtoCollectionFactory;
 
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\ValueCalculation\ShippingCostCalculator
+     */
+    private $shippingCostCalculator;
+
     public function __construct(
-        BasketPositionDtoCollectionFactory $basketPositionDtoCollectionFactory
+        BasketPositionDtoCollectionFactory $basketPositionDtoCollectionFactory,
+        ShippingCostCalculator $shippingCostCalculator
     ) {
         $this->basketPositionDtoCollectionFactory = $basketPositionDtoCollectionFactory;
+        $this->shippingCostCalculator = $shippingCostCalculator;
     }
 
     /**
@@ -24,10 +31,14 @@ class BasketDtoFactory
      */
     public function create($order)
     {
+        $grossDeliveryCosts = floatval($order->getFieldData("oxdelcost"));
+        $deliveryTax = floatval($order->getFieldData("oxdelvat"));
+        $netDeliveryCosts = $this->shippingCostCalculator->calculateNetPrice($grossDeliveryCosts, $deliveryTax);
+
         $basket = new BasketDto();
         $basket->currency = strval($order->getFieldData("oxcurrency"));
-        $basket->grossTotal = floatval($order->getFieldData("oxtotalbrutsum"));
-        $basket->netTotal = floatval($order->getFieldData("oxtotalnetsum"));
+        $basket->grossTotal = floatval($order->getFieldData("oxtotalbrutsum")) + $grossDeliveryCosts;
+        $basket->netTotal = floatval($order->getFieldData("oxtotalnetsum")) + $netDeliveryCosts;
         $basket->positions = $this->basketPositionDtoCollectionFactory->create($order);
         return $basket;
     }

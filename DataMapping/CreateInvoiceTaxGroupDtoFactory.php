@@ -51,4 +51,33 @@ class CreateInvoiceTaxGroupDtoFactory
 
         return $taxGroup;
     }
+
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order $order
+     * @param \Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto[] $taxGroups
+     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto|null
+     */
+    public function createVoucherPosition($order, $taxGroups)
+    {
+        $voucherDiscountGross = -floatval($order->getFieldData("oxvoucherdiscount"));
+        if ($voucherDiscountGross === 0.0) {
+            return null;
+        }
+
+        $valueToTaxSum = array_sum(array_map(
+            function (CreateInvoiceTaxGroupDto $dto) {
+                return $dto->valueToTax;
+            },
+            $taxGroups
+        ));
+        $voucherDiscountNet = round(floatval($order->getFieldData("oxtotalnetsum")) - $valueToTaxSum, 2);
+
+        $voucherTaxPercent = round((($voucherDiscountGross / $voucherDiscountNet) - 1) * 100);
+
+        $position = new CreateInvoiceTaxGroupDto();
+        $position->valueToTax = $voucherDiscountNet;
+        $position->taxPercent = $voucherTaxPercent;
+        $position->total = round($voucherDiscountGross - $voucherDiscountNet, 2);
+        return $position;
+    }
 }

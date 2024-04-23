@@ -4,6 +4,7 @@ namespace Axytos\KaufAufRechnung_OXID6\Tests\Unit\ValueCalculation;
 
 use Axytos\KaufAufRechnung_OXID6\ValueCalculation\TrackingIdCalculator;
 use OxidEsales\Eshop\Application\Model\Order;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -18,6 +19,7 @@ class TrackingIdCalculatorTest extends TestCase
      * @before
      * @return void
      */
+    #[Before]
     public function beforeEach()
     {
         $this->sut = new TrackingIdCalculator();

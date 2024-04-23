@@ -65,34 +65,29 @@ class CreateInvoiceBasketPositionDtoFactory
      */
     public function createVoucherPosition($order, $positions)
     {
-        $voucherDiscountGross = -floatval($order->getFieldData("oxvoucherdiscount"));
-        if ($voucherDiscountGross === 0.0) {
+        $isB2B = boolval($order->getFieldData('oxisnettomode'));
+
+        // the total monetary value of all applied vouchers
+        $totalVoucherDiscountForOrder = -1 * $order->getFieldData("oxvoucherdiscount");
+
+        if ($totalVoucherDiscountForOrder === 0.0) {
             return null;
-        }
-
-        $netPosSum = array_sum(array_map(
-            function (CreateInvoiceBasketPositionDto $dto) {
-                return $dto->netPositionTotal;
-            },
-            $positions
-        ));
-        $voucherDiscountNet = round(floatval($order->getFieldData("oxtotalnetsum")) - $netPosSum, 2);
-        if (!is_finite($voucherDiscountNet)) {
-            $voucherDiscountNet = 0;
-        }
-
-        $voucherTaxPercent = round((($voucherDiscountGross / $voucherDiscountNet) - 1) * 100);
-        if (!is_finite($voucherTaxPercent)) {
-            $voucherTaxPercent = 0;
         }
 
         $position = new CreateInvoiceBasketPositionDto();
         $position->productId = 'oxvoucherdiscount';
         $position->productName = 'Voucher';
         $position->quantity = 1;
-        $position->grossPositionTotal = $voucherDiscountGross;
-        $position->netPositionTotal = $voucherDiscountNet;
-        $position->taxPercent = $voucherTaxPercent;
+        $position->taxPercent = 0;
+
+        if ($isB2B) {
+            $position->grossPositionTotal = 0;
+            $position->netPositionTotal = $totalVoucherDiscountForOrder;
+        } else {
+            $position->grossPositionTotal = $totalVoucherDiscountForOrder;
+            $position->netPositionTotal = 0;
+        }
+
         $position->netPricePerUnit = $position->netPositionTotal;
         $position->grossPricePerUnit = $position->grossPositionTotal;
         return $position;

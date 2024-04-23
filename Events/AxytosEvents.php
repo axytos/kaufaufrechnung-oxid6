@@ -95,14 +95,22 @@ class AxytosEvents
      */
     private static function addTableColumn($tableName, $columnName, $definition)
     {
-        $statement = "ALTER TABLE $tableName ADD COLUMN IF NOT EXISTS $columnName $definition";
-
         $container = ContainerFactory::getInstance()->getContainer();
         /** @var QueryBuilderFactoryInterface */
         $queryBuilderFactory = $container->get(QueryBuilderFactoryInterface::class);
         $queryBuilder = $queryBuilderFactory->create();
-        $queryBuilder->getConnection()->executeStatement($statement);
+
+        // SQL to check if column exists
+        $checkColumnSql = "SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?";
+        $columnExists = intval($queryBuilder->getConnection()->fetchOne($checkColumnSql, [$tableName, $columnName]));
+
+        // If column doesn't exist
+        if ($columnExists === 0) {
+            $statement = "ALTER TABLE $tableName ADD COLUMN $columnName $definition";
+            $queryBuilder->getConnection()->executeStatement($statement);
+        }
     }
+
 
     /**
      * @return void

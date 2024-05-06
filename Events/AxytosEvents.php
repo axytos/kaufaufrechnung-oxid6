@@ -18,6 +18,13 @@ class AxytosEvents
     const PAYMENT_METHOD_DE_LONG_DESC = "Sie zahlen bequem die Rechnung, sobald Sie die Ware erhalten haben, innerhalb der Zahlfrist";
     const PAYMENT_METHOD_EN_DESC = "Buy Now Pay Later";
     const PAYMENT_METHOD_EN_LONG_DESC = "You conveniently pay the invoice as soon as you receive the goods, within the payment period";
+    const PAYMENT_METHOD_FR_DESC = "Buy Now Pay Later";
+    const PAYMENT_METHOD_FR_LONG_DESC = "Vous payez la facture dès que vous recevez la marchandise, dans le délai de paiement.";
+    const PAYMENT_METHOD_NL_DESC = "Buy Now Pay Later";
+    const PAYMENT_METHOD_NL_LONG_DESC = "Je moet de factuur betalen zodra je de goederen hebt ontvangen, binnen de betalingstermijn.";
+    const PAYMENT_METHOD_ES_DESC = "Buy Now Pay Later";
+    const PAYMENT_METHOD_ES_LONG_DESC = "Pagas la factura convenientemente en cuanto has recibido la mercancía, dentro del plazo de pago.";
+
 
     public function __construct()
     {
@@ -140,24 +147,58 @@ class AxytosEvents
             /** @phpstan-ignore-next-line */
             $payment->oxpayments__oxtoamount = new Field(1000000);
             $payment->save();
+        }
 
-            $languages = Registry::getLang()->getAllShopLanguageIds();
+        $languages = Registry::getLang()->getAllShopLanguageIds();
 
-            if (in_array("de", $languages, true)) {
-                $lang = strval(array_search("de", $languages, true));
-                $payment->setLanguage($lang);
-                $payment->oxpayments__oxdesc = new Field(self::PAYMENT_METHOD_DE_DESC);
-                $payment->oxpayments__oxlongdesc = new Field(self::PAYMENT_METHOD_DE_LONG_DESC);
-                $payment->save();
-            }
+        if (in_array("de", $languages, true)) {
+            $lang = strval(array_search("de", $languages, true));
+            $payment->setLanguage($lang);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxdesc = new Field(self::PAYMENT_METHOD_DE_DESC);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxlongdesc = new Field(self::PAYMENT_METHOD_DE_LONG_DESC);
+            $payment->save();
+        }
 
-            if (in_array("en", $languages, true)) {
-                $lang = strval(array_search("en", $languages, true));
-                $payment->setLanguage($lang);
-                $payment->oxpayments__oxdesc = new Field(self::PAYMENT_METHOD_EN_DESC);
-                $payment->oxpayments__oxlongdesc = new Field(self::PAYMENT_METHOD_EN_LONG_DESC);
-                $payment->save();
-            }
+        if (in_array("en", $languages, true)) {
+            $lang = strval(array_search("en", $languages, true));
+            $payment->setLanguage($lang);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxdesc = new Field(self::PAYMENT_METHOD_EN_DESC);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxlongdesc = new Field(self::PAYMENT_METHOD_EN_LONG_DESC);
+            $payment->save();
+        }
+
+        if (in_array("fr", $languages, true)) {
+            $lang = strval(array_search("fr", $languages, true));
+            $payment->setLanguage($lang);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxdesc = new Field(self::PAYMENT_METHOD_FR_DESC);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxlongdesc = new Field(self::PAYMENT_METHOD_FR_LONG_DESC);
+            $payment->save();
+        }
+
+        if (in_array("nl", $languages, true)) {
+            $lang = strval(array_search("nl", $languages, true));
+            $payment->setLanguage($lang);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxdesc = new Field(self::PAYMENT_METHOD_NL_DESC);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxlongdesc = new Field(self::PAYMENT_METHOD_NL_LONG_DESC);
+            $payment->save();
+        }
+
+        if (in_array("es", $languages, true)) {
+            $lang = strval(array_search("es", $languages, true));
+            $payment->setLanguage($lang);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxdesc = new Field(self::PAYMENT_METHOD_ES_DESC);
+            /** @phpstan-ignore-next-line */
+            $payment->oxpayments__oxlongdesc = new Field(self::PAYMENT_METHOD_ES_LONG_DESC);
+            $payment->save();
         }
 
         $metaDataHandler->updateViews();

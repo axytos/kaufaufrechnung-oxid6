@@ -12,11 +12,13 @@ class AxytosPaymentList extends AxytosPaymentList_parent
     use ServiceContainer;
 
     /**
+     * @param \OxidEsales\Eshop\Application\Model\User $oUser — session user object
      * @return array<\OxidEsales\Eshop\Application\Model\Payment>
      */
     public function getPaymentList($sShipSetId, $dPrice, $oUser = null)
     {
         try {
+            /** @var array<\OxidEsales\Eshop\Application\Model\Payment> */
             $paymentList = parent::getPaymentList($sShipSetId, $dPrice, $oUser);
 
             $pluginConfigurationValidator = $this->getServiceFromContainer(PluginConfigurationValidator::class);

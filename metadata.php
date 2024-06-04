@@ -40,7 +40,7 @@ $aModule = array(
         "nl" => "Je moet de factuur betalen zodra je de goederen hebt ontvangen, binnen de betalingstermijn.",
     ],
     "thumbnail"   => "assets/img/logo.png",
-    "version"     => "1.6.8",
+    "version"     => "1.6.9",
     "author"      => "axytos GmbH",
     "url"         => "https://www.axytos.com",
     "email"       => "info@axytos.com",

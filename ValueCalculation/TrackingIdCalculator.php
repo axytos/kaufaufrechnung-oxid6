@@ -12,9 +12,9 @@ class TrackingIdCalculator
      */
     public function calculate($order)
     {
-        $trackingCode = strval($order->getFieldData("oxtrackcode"));
+        $trackingCode = $order->getFieldData("oxtrackcode");
 
-        if ($trackingCode !== '') {
+        if (is_string($trackingCode) && $trackingCode !== "") {
             return [$trackingCode];
         }
 

@@ -71,7 +71,7 @@ class InvoiceOrderContextFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
-     * @return \Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface&\Axytos\KaufAufRechnung_OXID6\Core\InvoiceOrderContext
+     * @return \Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface
      */
     public function getInvoiceOrderContext(
         $order

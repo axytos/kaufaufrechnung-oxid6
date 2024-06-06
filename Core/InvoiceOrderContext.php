@@ -148,8 +148,6 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
      */
     public function getRefundBasket()
     {
-        // should never be triggered!
-        // refunds are currently not a supported feature for oxid
         return new RefundBasketDto();
     }
 

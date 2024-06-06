@@ -41,7 +41,7 @@ class AxytosEvents
             self::clearTmp();
         } catch (\Throwable $th) {
             self::handleError($th);
-        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
+        } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
             self::handleError($th);
         }
     }
@@ -56,7 +56,7 @@ class AxytosEvents
             self::clearTmp();
         } catch (\Throwable $th) {
             self::handleError($th);
-        } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
+        } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
             self::handleError($th);
         }
     }
@@ -66,12 +66,20 @@ class AxytosEvents
      */
     private static function createOrderColumns()
     {
+        self::addOrderCheckProcessStatus();
         self::addOrderPreCheckResult();
-        self::addShippingReported();
-        self::addReportedTrackingCode();
-        self::addOrderBasketHash();
-        self::addOrderState();
-        self::addOrderStateData();
+    }
+
+    /**
+     * @return void
+     */
+    private static function addOrderCheckProcessStatus()
+    {
+        self::addTableColumn(
+            "oxorder",
+            "AXYTOSKAUFAUFRECHNUNGORDERCHECKPROCESSSTATUS",
+            "VARCHAR(128) DEFAULT 'UNCHECKED'"
+        );
     }
 
     /**
@@ -82,66 +90,6 @@ class AxytosEvents
         self::addTableColumn(
             "oxorder",
             "AXYTOSKAUFAUFRECHNUNGORDERPRECHECKRESULT",
-            "TEXT"
-        );
-    }
-
-    /**
-     * @return void
-     */
-    private static function addShippingReported()
-    {
-        self::addTableColumn(
-            "oxorder",
-            "AXYTOSKAUFAUFRECHNUNGSHIPPINGREPORTED",
-            "TINYINT(1) NOT NULL DEFAULT 0"
-        );
-    }
-
-    /**
-     * @return void
-     */
-    private static function addReportedTrackingCode()
-    {
-        self::addTableColumn(
-            "oxorder",
-            "AXYTOSKAUFAUFRECHNUNGREPORTEDTRACKINGCODE",
-            "VARCHAR(128) NOT NULL DEFAULT ''"
-        );
-    }
-
-    /**
-     * @return void
-     */
-    private static function addOrderBasketHash()
-    {
-        self::addTableColumn(
-            "oxorder",
-            "AXYTOSKAUFAUFRECHNUNGORDERBASKETHASH",
-            "VARCHAR(64) NOT NULL DEFAULT ''" // possible hash sha256 with 64 chars, but not sha512!
-        );
-    }
-
-    /**
-     * @return void
-     */
-    private static function addOrderState()
-    {
-        self::addTableColumn(
-            "oxorder",
-            "AXYTOSKAUFAUFRECHNUNGORDERSTATE",
-            "TEXT"
-        );
-    }
-
-    /**
-     * @return void
-     */
-    private static function addOrderStateData()
-    {
-        self::addTableColumn(
-            "oxorder",
-            "AXYTOSKAUFAUFRECHNUNGORDERSTATEDATA",
             "TEXT"
         );
     }
@@ -261,7 +209,9 @@ class AxytosEvents
      */
     private static function disablePaymentMethod()
     {
-        /** @var Payment */
+        /**
+         * @var Payment
+         */
         $payment = oxNew(Payment::class);
         if ($payment->load(self::PAYMENT_METHOD_ID)) {
             /** @phpstan-ignore-next-line */

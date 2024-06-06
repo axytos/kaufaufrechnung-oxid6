@@ -3,24 +3,12 @@
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\InvoiceAddressDto;
-use Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository;
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 
 class InvoiceAddressDtoFactory
 {
-    /**
-     * @var \Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @param \Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository $orderRepository
-     */
-    public function __construct(OrderRepository $orderRepository)
-    {
-        $this->orderRepository = $orderRepository;
-    }
-
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
      * @return \Axytos\ECommerce\DataTransferObjects\InvoiceAddressDto
@@ -40,12 +28,42 @@ class InvoiceAddressDtoFactory
 
         $countryId = $order->getFieldData("oxbillcountryid");
         if ($countryId !== "") {
-            $invoiceAddressDto->country = $this->orderRepository->findInvoiceAddressCountryById($countryId);
+            /** @var QueryBuilderFactoryInterface */
+            $countryQueryBuilderFactory = ContainerFactory::getInstance()
+                ->getContainer()
+                ->get(QueryBuilderFactoryInterface::class);
+
+            $countryQueryBuilder = $countryQueryBuilderFactory->create();
+
+            $countryQueryBuilder->select('oxcountry.oxisoalpha2')
+                ->from('oxcountry')
+                ->where('(oxid = :countryid)')
+                ->setParameters([
+                    ':countryid' => $countryId
+                ]);
+
+            /** @phpstan-ignore-next-line */
+            $invoiceAddressDto->country = strval($countryQueryBuilder->execute()->fetchOne()) !== '' ? strval($countryQueryBuilder->execute()->fetchOne()) : null;
         }
 
         $stateId = $order->getFieldData("oxbillstateid");
         if ($stateId !== "") {
-            $invoiceAddressDto->region = $this->orderRepository->findInvoiceAddressStateById($stateId);
+            /** @var QueryBuilderFactoryInterface */
+            $stateQueryBuilderFactory = ContainerFactory::getInstance()
+                ->getContainer()
+                ->get(QueryBuilderFactoryInterface::class);
+
+            $stateQueryBuilder = $stateQueryBuilderFactory->create();
+
+            $stateQueryBuilder->select('oxstates.oxtitle')
+                ->from('oxstates')
+                ->where('(oxid = :stateid)')
+                ->setParameters([
+                    ':stateid' => $stateId
+                ]);
+
+            /** @phpstan-ignore-next-line */
+            $invoiceAddressDto->region = strval($stateQueryBuilder->execute()->fetchOne()) !== '' ? strval($stateQueryBuilder->execute()->fetchOne()) : null;
         }
 
         return $invoiceAddressDto;

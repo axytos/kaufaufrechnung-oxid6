@@ -4,19 +4,16 @@
  * Metadata version
  */
 
-use Axytos\KaufAufRechnung_OXID6\Controller\ActionCallbackController;
 use Axytos\KaufAufRechnung_OXID6\Controller\CreditCheckAgreementController;
 use Axytos\KaufAufRechnung_OXID6\Events\AxytosEvents;
 use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosOrder;
 use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosPayment;
 use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosPaymentList;
 use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosPaymentGateway;
-use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosMaintenance;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\PaymentGateway;
 use OxidEsales\Eshop\Application\Model\PaymentList;
-use OxidEsales\Eshop\Application\Model\Maintenance;
 
 $sMetadataVersion = "2.0";
 
@@ -48,7 +45,6 @@ $aModule = array(
         PaymentList::class      => AxytosPaymentList::class,
         PaymentGateway::class   => AxytosPaymentGateway::class,
         Payment::class          => AxytosPayment::class,
-        Maintenance::class      => AxytosMaintenance::class,
         Order::class            => AxytosOrder::class,
     ],
     "events"      => [
@@ -57,7 +53,6 @@ $aModule = array(
     ],
     "controllers" => [
         "axytos_kaufaufrechnung_credit_check_agreement" => CreditCheckAgreementController::class,
-        "axytos_kaufaufrechnung_action_callback" => ActionCallbackController::class,
     ],
     "settings"    => [
         [

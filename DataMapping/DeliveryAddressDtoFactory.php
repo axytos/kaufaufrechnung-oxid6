@@ -3,24 +3,12 @@
 namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\DeliveryAddressDto;
-use Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository;
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
+use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
 
 class DeliveryAddressDtoFactory
 {
-    /**
-     * @var \Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @param \Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository $orderRepository
-     */
-    public function __construct(OrderRepository $orderRepository)
-    {
-        $this->orderRepository = $orderRepository;
-    }
-
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
      * @return \Axytos\ECommerce\DataTransferObjects\DeliveryAddressDto
@@ -45,12 +33,42 @@ class DeliveryAddressDtoFactory
 
         $countryId = $this->getStringFieldOrAlternative($order, 'oxdelcountryid', 'oxbillcountryid');
         if ($countryId !== "") {
-            $deliveryAddressDto->country = $this->orderRepository->findDeliveryAddressCountryById($countryId);
+            /** @var QueryBuilderFactoryInterface */
+            $countryQueryBuilderFactory = ContainerFactory::getInstance()
+                ->getContainer()
+                ->get(QueryBuilderFactoryInterface::class);
+
+            $countryQueryBuilder = $countryQueryBuilderFactory->create();
+
+            $countryQueryBuilder->select('oxcountry.oxisoalpha2')
+                ->from('oxcountry')
+                ->where('(oxid = :countryid)')
+                ->setParameters([
+                    ':countryid' => $countryId
+                ]);
+
+            /** @phpstan-ignore-next-line */
+            $deliveryAddressDto->country = strval($countryQueryBuilder->execute()->fetchOne()) !== '' ? strval($countryQueryBuilder->execute()->fetchOne()) : null;
         }
 
         $stateId = $this->getStringFieldOrAlternative($order, 'oxdelstateid', 'oxbillstateid');
         if ($stateId !== "") {
-            $deliveryAddressDto->region = $this->orderRepository->findDeliveryAddressStateById($stateId);
+            /** @var QueryBuilderFactoryInterface */
+            $stateQueryBuilderFactory = ContainerFactory::getInstance()
+                ->getContainer()
+                ->get(QueryBuilderFactoryInterface::class);
+
+            $stateQueryBuilder = $stateQueryBuilderFactory->create();
+
+            $stateQueryBuilder->select('oxstates.oxtitle')
+                ->from('oxstates')
+                ->where('(oxid = :stateid)')
+                ->setParameters([
+                    ':stateid' => $stateId
+                ]);
+
+            /** @phpstan-ignore-next-line */
+            $deliveryAddressDto->region = strval($stateQueryBuilder->execute()->fetchOne()) !== '' ? strval($stateQueryBuilder->execute()->fetchOne()) : null;
         }
 
         return $deliveryAddressDto;

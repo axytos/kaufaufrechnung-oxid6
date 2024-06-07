@@ -38,7 +38,7 @@ class VoucherDiscountCalculatorTest extends TestCase
 
         $actual = $this->sut->calculate($order);
 
-        $this->assertIsFloat($actual);
+        $this->assertTrue(is_float($actual));
         $this->assertSame(0.0, $actual);
     }
 
@@ -51,7 +51,7 @@ class VoucherDiscountCalculatorTest extends TestCase
 
         $actual = $this->sut->calculate($order);
 
-        $this->assertIsFloat($actual);
+        $this->assertTrue(is_float($actual));
         $this->assertSame(-42.0, $actual);
     }
 
@@ -64,7 +64,7 @@ class VoucherDiscountCalculatorTest extends TestCase
 
         $actual = $this->sut->calculate($order);
 
-        $this->assertIsFloat($actual);
+        $this->assertTrue(is_float($actual));
         $this->assertSame(-42.36, $actual);
     }
 

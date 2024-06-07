@@ -4,6 +4,7 @@ namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\BasketPositionDto;
 use Axytos\KaufAufRechnung_OXID6\ValueCalculation\ShippingCostCalculator;
+use Axytos\KaufAufRechnung_OXID6\ValueCalculation\VoucherDiscountCalculator;
 
 class BasketPositionDtoFactory
 {
@@ -12,10 +13,17 @@ class BasketPositionDtoFactory
      */
     private $shippingCostCalculator;
 
+    /**
+     * @var \Axytos\KaufAufRechnung_OXID6\ValueCalculation\VoucherDiscountCalculator
+     */
+    private $voucherDiscountCalculator;
+
     public function __construct(
-        ShippingCostCalculator $shippingCostCalculator
+        ShippingCostCalculator $shippingCostCalculator,
+        VoucherDiscountCalculator $voucherDiscountCalculator
     ) {
         $this->shippingCostCalculator = $shippingCostCalculator;
+        $this->voucherDiscountCalculator = $voucherDiscountCalculator;
     }
 
     /**
@@ -67,8 +75,7 @@ class BasketPositionDtoFactory
     {
         $isB2B = boolval($order->getFieldData('oxisnettomode'));
 
-        // the total monetary value of all applied vouchers
-        $totalVoucherDiscountForOrder = -1 * $order->getFieldData("oxvoucherdiscount");
+        $totalVoucherDiscountForOrder = $this->voucherDiscountCalculator->calculate($order);
 
         if ($totalVoucherDiscountForOrder === 0.0) {
             return null;

@@ -10,13 +10,13 @@ use Axytos\KaufAufRechnung_OXID6\Core\InvoiceOrderContextFactory;
 use Axytos\KaufAufRechnung_OXID6\Core\OrderCheckProcessStateMachine;
 use Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler;
 use Axytos\KaufAufRechnung_OXID6\Events\AxytosEvents;
-use Axytos\KaufAufRechnung_OXID6\Extend\ServiceContainer;
+use Axytos\KaufAufRechnung_OXID6\Extend\AxytosServiceContainer;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Registry;
 
 class AxytosPaymentGateway extends AxytosPaymentGateway_parent
 {
-    use ServiceContainer;
+    use AxytosServiceContainer;
 
     /** @phpstan-ignore-next-line
      * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator */
@@ -41,12 +41,12 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
     public function __construct()
     {
         parent::__construct();
-        $this->pluginConfigurationValidator = $this->getServiceFromContainer(PluginConfigurationValidator::class);
-        $this->invoiceClient = $this->getServiceFromContainer(InvoiceClientInterface::class);
-        $this->errorHandler = $this->getServiceFromContainer(ErrorHandler::class);
-        $this->invoiceOrderContextFactory = $this->getServiceFromContainer(InvoiceOrderContextFactory::class);
-        $this->orderCheckProcessStateMachine = $this->getServiceFromContainer(OrderCheckProcessStateMachine::class);
-        $this->pluginConfiguration = $this->getServiceFromContainer(PluginConfiguration::class);
+        $this->pluginConfigurationValidator = $this->getFromAxytosServiceContainer(PluginConfigurationValidator::class);
+        $this->invoiceClient = $this->getFromAxytosServiceContainer(InvoiceClientInterface::class);
+        $this->errorHandler = $this->getFromAxytosServiceContainer(ErrorHandler::class);
+        $this->invoiceOrderContextFactory = $this->getFromAxytosServiceContainer(InvoiceOrderContextFactory::class);
+        $this->orderCheckProcessStateMachine = $this->getFromAxytosServiceContainer(OrderCheckProcessStateMachine::class);
+        $this->pluginConfiguration = $this->getFromAxytosServiceContainer(PluginConfiguration::class);
     }
 
     public function executePayment($amount, &$oOrder)

@@ -5,6 +5,7 @@ namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 use Axytos\ECommerce\DataTransferObjects\CustomerDataDto;
 use DateTimeImmutable;
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\User;
 
 class CustomerDataDtoFactory
 {
@@ -14,6 +15,7 @@ class CustomerDataDtoFactory
      */
     public function create($order)
     {
+        /** @var \OxidEsales\Eshop\Application\Model\User */
         $user = $order->getOrderUser();
 
         $personalDataDto = new CustomerDataDto();

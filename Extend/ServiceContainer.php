@@ -4,7 +4,7 @@ namespace Axytos\KaufAufRechnung_OXID6\Extend;
 
 use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 
-trait AxytosServiceContainer
+trait ServiceContainer
 {
     /**
      * @template T
@@ -12,7 +12,7 @@ trait AxytosServiceContainer
      * @return T
      * @param string $serviceName
      */
-    protected function getFromAxytosServiceContainer($serviceName)
+    protected function getServiceFromContainer($serviceName)
     {
         return ContainerFactory::getInstance()
             ->getContainer()

@@ -8,6 +8,7 @@ use Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceBasketPositionDtoColle
 use Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceTaxGroupDtoFactory;
 use Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceTaxGroupDtoCollectionFactory;
 use Axytos\KaufAufRechnung_OXID6\ValueCalculation\ShippingCostCalculator;
+use Axytos\KaufAufRechnung_OXID6\ValueCalculation\VoucherDiscountCalculator;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\EshopCommunity\Core\Model\ListModel;
@@ -30,9 +31,10 @@ class CreateInvoiceBasketDtoMappingForB2BVoucherWithPercentageDiscountTest exten
     public function beforeEach()
     {
         $shippingCostCalculator = new ShippingCostCalculator();
-        $createInvoicebasketPositionDtoFactory = new CreateInvoiceBasketPositionDtoFactory($shippingCostCalculator);
+        $voucherDiscountCalculator = new VoucherDiscountCalculator();
+        $createInvoicebasketPositionDtoFactory = new CreateInvoiceBasketPositionDtoFactory($shippingCostCalculator, $voucherDiscountCalculator);
         $createInvoicebasketPositionDtoCollectionFactory = new CreateInvoiceBasketPositionDtoCollectionFactory($createInvoicebasketPositionDtoFactory);
-        $createInvoiceTaxGroupDtoFactory = new CreateInvoiceTaxGroupDtoFactory($shippingCostCalculator);
+        $createInvoiceTaxGroupDtoFactory = new CreateInvoiceTaxGroupDtoFactory($shippingCostCalculator, $voucherDiscountCalculator);
         $createInvoiceTaxGroupDtoCollectionFactory = new CreateInvoiceTaxGroupDtoCollectionFactory($createInvoiceTaxGroupDtoFactory);
         $this->sut = new CreateInvoiceBasketDtoFactory(
             $createInvoicebasketPositionDtoCollectionFactory,

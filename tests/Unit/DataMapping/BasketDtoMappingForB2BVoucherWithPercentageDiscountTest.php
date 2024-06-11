@@ -6,6 +6,7 @@ use Axytos\KaufAufRechnung_OXID6\DataMapping\BasketPositionDtoCollectionFactory;
 use Axytos\KaufAufRechnung_OXID6\DataMapping\BasketDtoFactory;
 use Axytos\KaufAufRechnung_OXID6\DataMapping\BasketPositionDtoFactory;
 use Axytos\KaufAufRechnung_OXID6\ValueCalculation\ShippingCostCalculator;
+use Axytos\KaufAufRechnung_OXID6\ValueCalculation\VoucherDiscountCalculator;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\EshopCommunity\Core\Model\ListModel;
@@ -28,7 +29,8 @@ class BasketDtoMappingForB2BVoucherWithPercentageDiscountTest extends BasketDtoM
     public function beforeEach()
     {
         $shippingCostCalculator = new ShippingCostCalculator();
-        $basketPositionDtoFactory = new BasketPositionDtoFactory($shippingCostCalculator);
+        $voucherDiscountCalculator = new VoucherDiscountCalculator();
+        $basketPositionDtoFactory = new BasketPositionDtoFactory($shippingCostCalculator, $voucherDiscountCalculator);
         $basketPositionDtoCollectionFactory = new BasketPositionDtoCollectionFactory($basketPositionDtoFactory);
         $this->sut = new BasketDtoFactory(
             $basketPositionDtoCollectionFactory,

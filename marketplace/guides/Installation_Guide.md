@@ -1,8 +1,8 @@
 ---
 author: axytos GmbH
 title: "Installationsanleitung"
-subtitle: "axytos Kauf auf Rechnung, Oxid6"
-header-right: axytos Kauf auf Rechnung, Oxid6
+subtitle: "axytos Kauf auf Rechnung für OXID6"
+header-right: axytos Kauf auf Rechnung für OXID6
 lang: "de"
 titlepage: true
 titlepage-rule-height: 2
@@ -12,7 +12,7 @@ linkcolor: blue
 
 ## Installationsanleitung
 
-Das Modul stellt die Bezahlmethode __Kauf Auf Rechnung__ für den Einkauf in Ihrem Oxid Shop bereit.
+Das Modul stellt die Bezahlmethode __Kauf Auf Rechnung__ für den Einkauf in Ihrem OXID Shop bereit.
 
 Einkäufe mit dieser Bezahlmethode werden von axytos ggf. bis zum Forderungsmanagement übernommen.
 
@@ -41,9 +41,9 @@ Anleitung auf der OXID-6 Website:
 https://docs.oxid-esales.com/developer/en/latest/development/modules_components_themes/module/installation_setup/installation.html
 
 Nachdem das Modul erfolgreich installiert wurde, kann es nun aktiviert werden. Dies erfolgt über die
-Administrations-Oberfläche von Oxid.
+Administrations-Oberfläche von OXID.
 
-1. Zur Administration Ihrer Oxid Distribution wechseln. Nach Installation ist das Modul unter _Erweiterungen > Module_ aufgeführt.
+1. Zur Administration Ihrer OXID Distribution wechseln. Nach Installation ist das Modul unter _Erweiterungen > Module_ aufgeführt.
 
 2. Unter _Stamm_ __Aktivieren__ ausführen.
 
@@ -52,9 +52,9 @@ Das Modul ist jetzt installiert und aktiviert und kann konfiguriert werden.
 Um das Modul nutzen zu können, benötigen Sie valide Verbindungsdaten zu [https://portal.axytos.com/](https://portal.axytos.com/) (siehe Voraussetzungen).
 
 
-## Modul- und Shop-Konfiguration in Oxid
+## Modul- und Shop-Konfiguration in OXID
 
-1. Zur Administration Ihrer Oxid Distribution wechseln. Das Modul ist unter _Erweiterungen > Module_ aufgeführt.
+1. Zur Administration Ihrer OXID Distribution wechseln. Das Modul ist unter _Erweiterungen > Module_ aufgeführt.
 
 2. Zu _Einstell._ wechseln um die Konfiguration zu öffnen.
 

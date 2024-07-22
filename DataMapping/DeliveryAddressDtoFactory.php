@@ -67,7 +67,9 @@ class DeliveryAddressDtoFactory
     {
         $fieldValue = $this->getStringField($order, $fieldName);
 
-        if (is_null($fieldValue)) {
+        // some minor version of OXID6 allow columns not to be null, e.g. OXDELCOUNTRYID
+        // so we need to also check for empty values
+        if (is_null($fieldValue) || trim($fieldValue) === '') {
             return $this->getStringField($order, $altFieldName);
         }
         return $fieldValue;

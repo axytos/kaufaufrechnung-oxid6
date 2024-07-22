@@ -258,22 +258,30 @@ class OrderRepository
                 $queryBuilder->expr()->in('axytoskaufaufrechnungorderstate', $orderStateParameterNames),
                 $queryBuilder->expr()->isNull('axytoskaufaufrechnungorderstate')
             ))
-            ->orderBy('oxordernr')
+            ->orderBy('oxordernr', 'ASC')
             ->setParameters($parameters);
+
+        if (is_int($limit)) {
+            $queryBuilder->setMaxResults($limit);
+        }
+
+        if (is_string($startId)) {
+            $queryBuilder
+                ->andWhere('oxordernr >= :startId')
+                ->setParameter(':startId', $startId, ParameterType::STRING);
+        }
 
         /** @var \Doctrine\DBAL\Result */
         $result = $queryBuilder->execute();
         /** @var array<array<string,mixed>> */
         $rows = $result->fetchAllAssociative();
 
-        if (is_string($startId)) {
-            for ($j = 0; $j < count($rows); ++$j) {
-                if ($rows[$j]['oxordernr'] === $startId) {
-                    $rows = array_slice($rows, $j, $limit);
-                    break;
-                }
-            }
-        }
+        /** @var \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Logging\LoggerAdapterInterface */
+        $logger = ContainerFactory::getInstance()
+            ->getContainer()
+            ->get(\Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Logging\LoggerAdapterInterface::class);
+
+        $logger->info("Found orders: " . count($rows));
 
         /** @var array<string> */
         $orderIds = array_map(function ($row) {

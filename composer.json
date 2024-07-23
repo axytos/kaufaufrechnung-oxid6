@@ -44,5 +44,6 @@
         "oxideshop": {
             "target-directory": "axytos/kaufaufrechnung"
         }
-    }
+    },
+    "minimum-stability": "alpha"
 }

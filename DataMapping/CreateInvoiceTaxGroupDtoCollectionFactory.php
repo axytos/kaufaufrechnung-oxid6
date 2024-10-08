@@ -4,13 +4,11 @@ namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDto;
 use Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDtoCollection;
-use OxidEsales\Eshop\Application\Model\Order;
-use OxidEsales\Eshop\Core\Model\ListModel;
 
 class CreateInvoiceTaxGroupDtoCollectionFactory
 {
     /**
-     * @var \Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceTaxGroupDtoFactory
+     * @var CreateInvoiceTaxGroupDtoFactory
      */
     private $createInvoiceTaxGroupDtoFactory;
 
@@ -21,11 +19,12 @@ class CreateInvoiceTaxGroupDtoCollectionFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
-     * @return \Axytos\ECommerce\DataTransferObjects\CreateInvoiceTaxGroupDtoCollection
+     *
+     * @return CreateInvoiceTaxGroupDtoCollection
      */
     public function create($order)
     {
-        /** @var ListModel */
+        /** @var \OxidEsales\Eshop\Core\Model\ListModel */
         $orderArticles = $order->getOrderArticles();
 
         $positionTaxValues = array_map([$this->createInvoiceTaxGroupDtoFactory, 'create'], $orderArticles->getArray());
@@ -41,17 +40,19 @@ class CreateInvoiceTaxGroupDtoCollectionFactory
             array_reduce(
                 $positionTaxValues,
                 function (array $agg, CreateInvoiceTaxGroupDto $cur) {
-                    if (array_key_exists("$cur->taxPercent", $agg)) {
-                        $agg["$cur->taxPercent"]->total += $cur->total;
-                        $agg["$cur->taxPercent"]->valueToTax += $cur->valueToTax;
+                    if (array_key_exists("{$cur->taxPercent}", $agg)) {
+                        $agg["{$cur->taxPercent}"]->total += $cur->total;
+                        $agg["{$cur->taxPercent}"]->valueToTax += $cur->valueToTax;
                     } else {
-                        $agg["$cur->taxPercent"] = $cur;
+                        $agg["{$cur->taxPercent}"] = $cur;
                     }
+
                     return $agg;
                 },
                 []
             )
         );
+
         return new CreateInvoiceTaxGroupDtoCollection(...$taxGroups);
     }
 }

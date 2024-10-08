@@ -8,7 +8,6 @@ use Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosPaymentList;
 use PHPUnit\Framework\TestCase;
 
 /**
- *
  * This test validates that OXID extension models do not break the module inheritance chain.
  * That is, OXID will dynamically generate the following inhertance chain over all 3rd party modules:
  *
@@ -18,13 +17,15 @@ use PHPUnit\Framework\TestCase;
  *
  * So we must ensure that signatures of overridden methods are type invariant.
  * When this test fails it will raise a fatal error.
+ *
+ * @internal
  */
 class ModuleChainsTest extends TestCase
 {
     /**
      * @return void
      */
-    public function test_AxytosPayment_does_not_break_module_chain()
+    public function test_axytos_payment_does_not_break_module_chain()
     {
         class_alias(AxytosPayment::class, 'OtherPayment_parent');
 
@@ -57,7 +58,7 @@ class ModuleChainsTest extends TestCase
     /**
      * @return void
      */
-    public function test_AxytosPaymentGateway_does_not_break_module_chain()
+    public function test_axytos_payment_gateway_does_not_break_module_chain()
     {
         class_alias(AxytosPaymentGateway::class, 'OtherPaymentGateway_parent');
 
@@ -79,7 +80,7 @@ class ModuleChainsTest extends TestCase
     /**
      * @return void
      */
-    public function test_AxytosPaymentList_does_not_break_module_chain()
+    public function test_axytos_payment_list_does_not_break_module_chain()
     {
         class_alias(AxytosPaymentList::class, 'OtherPaymentList_parent');
 

@@ -6,17 +6,23 @@ use Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator;
 use Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler;
 use Axytos\KaufAufRechnung_OXID6\Events\AxytosEvents;
 use Axytos\KaufAufRechnung_OXID6\Extend\AxytosServiceContainer;
+use OxidEsales\Eshop\Application\Model\User;
 
 class AxytosPaymentList extends AxytosPaymentList_parent
 {
     use AxytosServiceContainer;
 
     /**
+     * @param User   $oUser      — session user object
+     * @param string $sShipSetId
+     * @param float  $dPrice
+     *
      * @return array<\OxidEsales\Eshop\Application\Model\Payment>
      */
     public function getPaymentList($sShipSetId, $dPrice, $oUser = null)
     {
         try {
+            /** @var array<\OxidEsales\Eshop\Application\Model\Payment> */
             $paymentList = parent::getPaymentList($sShipSetId, $dPrice, $oUser);
 
             $pluginConfigurationValidator = $this->getFromAxytosServiceContainer(PluginConfigurationValidator::class);

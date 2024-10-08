@@ -4,18 +4,11 @@ namespace Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer;
 
 use Axytos\ECommerce\Order\OrderCheckProcessStates;
 use Axytos\KaufAufRechnung\Core\Model\OrderStateMachine\OrderStates;
+use Axytos\KaufAufRechnung_OXID6\DependencyInjection\ContainerFactory;
 use Axytos\KaufAufRechnung_OXID6\Events\AxytosEvents;
-use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\ParameterType;
-use Exception;
-use OxidEsales\Eshop\Application\Model\Order;
-use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
-use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Field;
-use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Psr\Container\ContainerExceptionInterface;
 
 class OrderRepository
 {
@@ -26,12 +19,14 @@ class OrderRepository
     {
         /**
          * @var \Doctrine\DBAL\Query\QueryBuilder
+         *
          * @phpstan-ignore-next-line
          */
         $queryBuilder = ContainerFactory::getInstance()
             ->getContainer()
             ->get(QueryBuilderFactoryInterface::class)
-            ->create();
+            ->create()
+        ;
 
         $queryBuilder->getConnection()->beginTransaction();
     }
@@ -43,12 +38,14 @@ class OrderRepository
     {
         /**
          * @var \Doctrine\DBAL\Query\QueryBuilder
+         *
          * @phpstan-ignore-next-line
          */
         $queryBuilder = ContainerFactory::getInstance()
             ->getContainer()
             ->get(QueryBuilderFactoryInterface::class)
-            ->create();
+            ->create()
+        ;
 
         $queryBuilder->getConnection()->commit();
     }
@@ -60,62 +57,70 @@ class OrderRepository
     {
         /**
          * @var \Doctrine\DBAL\Query\QueryBuilder
+         *
          * @phpstan-ignore-next-line
          */
         $queryBuilder = ContainerFactory::getInstance()
             ->getContainer()
             ->get(QueryBuilderFactoryInterface::class)
-            ->create();
+            ->create()
+        ;
 
         $queryBuilder->getConnection()->rollBack();
     }
 
     /**
      * @param string $orderId
+     *
      * @return \OxidEsales\Eshop\Application\Model\Order|null
      */
     public function findOrder($orderId)
     {
         /** @var \OxidEsales\Eshop\Application\Model\Order */
-        $order = oxNew("oxorder");
+        $order = oxNew('oxorder');
         if ($order->load($orderId)) {
             return $order;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     *
      * @return string
      */
     public function findLogistician($order)
     {
         /**
          * @var \Doctrine\DBAL\Query\QueryBuilder
+         *
          * @phpstan-ignore-next-line
          */
         $queryBuilder = ContainerFactory::getInstance()
             ->getContainer()
             ->get(QueryBuilderFactoryInterface::class)
-            ->create();
+            ->create()
+        ;
 
         $queryBuilder->select('oxdeliveryset.oxtitle')
             ->from('oxdeliveryset')
             ->where('oxid = :oxdeliveryid')
             ->setParameters([
-                ':oxdeliveryid' => $order->getFieldData("oxdeltype"),
-            ]);
+                ':oxdeliveryid' => $order->getFieldData('oxdeltype'),
+            ])
+        ;
 
         /** @var \Doctrine\DBAL\Result */
         $result = $queryBuilder->execute();
         $value = strval($result->fetchOne());
 
-        return $value !== '' ? $value : "";
+        return '' !== $value ? $value : '';
     }
 
     /**
      * @param mixed $countryId
+     *
      * @return string|null
      */
     public function findDeliveryAddressCountryById($countryId)
@@ -123,7 +128,8 @@ class OrderRepository
         /** @var QueryBuilderFactoryInterface */
         $countryQueryBuilderFactory = ContainerFactory::getInstance()
             ->getContainer()
-            ->get(QueryBuilderFactoryInterface::class);
+            ->get(QueryBuilderFactoryInterface::class)
+        ;
 
         $countryQueryBuilder = $countryQueryBuilderFactory->create();
 
@@ -131,17 +137,19 @@ class OrderRepository
             ->from('oxcountry')
             ->where('(oxid = :countryid)')
             ->setParameters([
-                ':countryid' => $countryId
-            ]);
+                ':countryid' => $countryId,
+            ])
+        ;
 
         /** @phpstan-ignore-next-line */
         $country = strval($countryQueryBuilder->execute()->fetchOne());
-        $country = $country !== '' ? $country : null;
-        return $country;
+
+        return '' !== $country ? $country : null;
     }
 
     /**
      * @param mixed $stateId
+     *
      * @return string|null
      */
     public function findDeliveryAddressStateById($stateId)
@@ -149,7 +157,8 @@ class OrderRepository
         /** @var QueryBuilderFactoryInterface */
         $stateQueryBuilderFactory = ContainerFactory::getInstance()
             ->getContainer()
-            ->get(QueryBuilderFactoryInterface::class);
+            ->get(QueryBuilderFactoryInterface::class)
+        ;
 
         $stateQueryBuilder = $stateQueryBuilderFactory->create();
 
@@ -157,17 +166,19 @@ class OrderRepository
             ->from('oxstates')
             ->where('(oxid = :stateid)')
             ->setParameters([
-                ':stateid' => $stateId
-            ]);
+                ':stateid' => $stateId,
+            ])
+        ;
 
         /** @phpstan-ignore-next-line */
         $state = strval($stateQueryBuilder->execute()->fetchOne());
-        $state = $state !== '' ? $state : null;
-        return $state;
+
+        return '' !== $state ? $state : null;
     }
 
     /**
      * @param mixed $countryId
+     *
      * @return string|null
      */
     public function findInvoiceAddressCountryById($countryId)
@@ -175,7 +186,8 @@ class OrderRepository
         /** @var QueryBuilderFactoryInterface */
         $countryQueryBuilderFactory = ContainerFactory::getInstance()
             ->getContainer()
-            ->get(QueryBuilderFactoryInterface::class);
+            ->get(QueryBuilderFactoryInterface::class)
+        ;
 
         $countryQueryBuilder = $countryQueryBuilderFactory->create();
 
@@ -183,17 +195,19 @@ class OrderRepository
             ->from('oxcountry')
             ->where('(oxid = :countryid)')
             ->setParameters([
-                ':countryid' => $countryId
-            ]);
+                ':countryid' => $countryId,
+            ])
+        ;
 
         /** @phpstan-ignore-next-line */
         $country = strval($countryQueryBuilder->execute()->fetchOne());
-        $country = $country !== '' ? $country : null;
-        return $country;
+
+        return '' !== $country ? $country : null;
     }
 
     /**
      * @param mixed $stateId
+     *
      * @return string|null
      */
     public function findInvoiceAddressStateById($stateId)
@@ -201,7 +215,8 @@ class OrderRepository
         /** @var QueryBuilderFactoryInterface */
         $stateQueryBuilderFactory = ContainerFactory::getInstance()
             ->getContainer()
-            ->get(QueryBuilderFactoryInterface::class);
+            ->get(QueryBuilderFactoryInterface::class)
+        ;
 
         $stateQueryBuilder = $stateQueryBuilderFactory->create();
 
@@ -209,24 +224,26 @@ class OrderRepository
             ->from('oxstates')
             ->where('(oxid = :stateid)')
             ->setParameters([
-                ':stateid' => $stateId
-            ]);
+                ':stateid' => $stateId,
+            ])
+        ;
 
         /** @phpstan-ignore-next-line */
         $state = strval($stateQueryBuilder->execute()->fetchOne());
-        $state = $state !== '' ? $state : null;
-        return $state;
+
+        return '' !== $state ? $state : null;
     }
 
     /**
-     * @param string[] $orderStates
-     * @param int|null $limit
+     * @param string[]    $orderStates
+     * @param int|null    $limit
      * @param string|null $startId
+     *
      * @return \OxidEsales\Eshop\Application\Model\Order[]
      */
     public function getOrdersByStates($orderStates, $limit = null, $startId = null)
     {
-        if (count($orderStates) === 0) {
+        if (0 === count($orderStates)) {
             return [];
         }
 
@@ -238,16 +255,17 @@ class OrderRepository
 
         $orderStateParameterNames = [];
 
-        for ($i = 0; $i < count($orderStates); $i++) {
-            $name = ":orderState$i";
+        for ($i = 0; $i < count($orderStates); ++$i) {
+            $name = ":orderState{$i}";
             $parameters[$name] = $orderStates[$i];
-            array_push($orderStateParameterNames, ":orderState$i");
+            array_push($orderStateParameterNames, ":orderState{$i}");
         }
 
         /** @var QueryBuilderFactoryInterface */
         $queryBuilderFactory = ContainerFactory::getInstance()
             ->getContainer()
-            ->get(QueryBuilderFactoryInterface::class);
+            ->get(QueryBuilderFactoryInterface::class)
+        ;
 
         $queryBuilder = $queryBuilderFactory->create();
 
@@ -259,7 +277,8 @@ class OrderRepository
                 $queryBuilder->expr()->isNull('axytoskaufaufrechnungorderstate')
             ))
             ->orderBy('oxordernr', 'ASC')
-            ->setParameters($parameters);
+            ->setParameters($parameters)
+        ;
 
         if (is_int($limit)) {
             $queryBuilder->setMaxResults($limit);
@@ -268,7 +287,8 @@ class OrderRepository
         if (is_string($startId)) {
             $queryBuilder
                 ->andWhere('oxordernr >= :startId')
-                ->setParameter(':startId', $startId, ParameterType::STRING);
+                ->setParameter(':startId', $startId, ParameterType::STRING)
+            ;
         }
 
         /** @var \Doctrine\DBAL\Result */
@@ -279,9 +299,10 @@ class OrderRepository
         /** @var \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Logging\LoggerAdapterInterface */
         $logger = ContainerFactory::getInstance()
             ->getContainer()
-            ->get(\Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Logging\LoggerAdapterInterface::class);
+            ->get(\Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Logging\LoggerAdapterInterface::class)
+        ;
 
-        $logger->info("Found orders: " . count($rows));
+        $logger->info('Found orders: ' . count($rows));
 
         /** @var array<string> */
         $orderIds = array_map(function ($row) {
@@ -289,11 +310,13 @@ class OrderRepository
         }, $rows);
 
         $orders = array_map([$this, 'findOrder'], $orderIds);
+
         return array_filter($orders);
     }
 
     /**
      * @param string|int $orderNumber
+     *
      * @return \OxidEsales\Eshop\Application\Model\Order|null
      */
     public function getOrderByOrderNumber($orderNumber)
@@ -303,7 +326,8 @@ class OrderRepository
         /** @var QueryBuilderFactoryInterface */
         $queryBuilderFactory = ContainerFactory::getInstance()
             ->getContainer()
-            ->get(QueryBuilderFactoryInterface::class);
+            ->get(QueryBuilderFactoryInterface::class)
+        ;
 
         $queryBuilder = $queryBuilderFactory->create();
 
@@ -313,8 +337,9 @@ class OrderRepository
             ->andWhere('oxordernr = :orderNumber')
             ->setParameters([
                 ':oxpaymenttype' => AxytosEvents::PAYMENT_METHOD_ID,
-                ':orderNumber' => $orderNumber
-            ]);
+                ':orderNumber' => $orderNumber,
+            ])
+        ;
 
         /** @var \Doctrine\DBAL\Result */
         $result = $queryBuilder->execute();
@@ -331,11 +356,12 @@ class OrderRepository
         /** @var QueryBuilderFactoryInterface */
         $queryBuilderFactory = ContainerFactory::getInstance()
             ->getContainer()
-            ->get(QueryBuilderFactoryInterface::class);
+            ->get(QueryBuilderFactoryInterface::class)
+        ;
         $queryBuilder = $queryBuilderFactory->create();
 
         // SQL to check if column exists
-        $checkColumnSql = "SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?";
+        $checkColumnSql = 'SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?';
 
         $tableName = 'oxorder';
         $orderCheckProcessStatusColumnName = 'axytoskaufaufrechnungordercheckprocessstatus';
@@ -344,14 +370,15 @@ class OrderRepository
         $checkProcessStatusColumnExists = intval($queryBuilder->getConnection()->fetchOne($checkColumnSql, [$tableName, $orderCheckProcessStatusColumnName]));
         $orderStateColumnExists = intval($queryBuilder->getConnection()->fetchOne($checkColumnSql, [$tableName, $orderStateColumnName]));
 
-        if ($checkProcessStatusColumnExists === 1 && $orderStateColumnExists === 1) {
+        if (1 === $checkProcessStatusColumnExists && 1 === $orderStateColumnExists) {
             $queryBuilder->select('oxorder.oxid')
                 ->from('oxorder')
                 ->where('oxpaymenttype = :oxpaymenttype')
                 ->andWhere($queryBuilder->expr()->isNull('axytoskaufaufrechnungorderstate'))
                 ->setParameters([
-                    ':oxpaymenttype' => AxytosEvents::PAYMENT_METHOD_ID
-                ]);
+                    ':oxpaymenttype' => AxytosEvents::PAYMENT_METHOD_ID,
+                ])
+            ;
 
             /** @var \Doctrine\DBAL\Result */
             $result = $queryBuilder->execute();
@@ -378,8 +405,8 @@ class OrderRepository
     }
 
     /**
-     *
      * @param \OxidEsales\Eshop\Application\Model\Order|null $order
+     *
      * @return string|null
      */
     private function mapAttributesToOrderState($order)
@@ -388,9 +415,9 @@ class OrderRepository
             return null;
         }
 
-        $checkProcessState = strval($order->getFieldData("axytoskaufaufrechnungordercheckprocessstatus"));
-        $hasCancelReported = boolval($order->getFieldData("oxstorno"));
-        $hasCreateInvoiceReported = strval($order->getFieldData("oxbillnr")) !== '';
+        $checkProcessState = strval($order->getFieldData('axytoskaufaufrechnungordercheckprocessstatus'));
+        $hasCancelReported = boolval($order->getFieldData('oxstorno'));
+        $hasCreateInvoiceReported = '' !== strval($order->getFieldData('oxbillnr'));
         $hasRefundReported = false; // refund reports are currently not a supported feature for oxid
         $hasPaymentReproted = false; // payment reports are currently not a supported feature for oxid
 
@@ -401,18 +428,132 @@ class OrderRepository
             case OrderCheckProcessStates::CONFIRMED:
                 if ($hasPaymentReproted) {  /** @phpstan-ignore-line */
                     return OrderStates::COMPLETELY_PAID;
-                } else if ($hasRefundReported) {  /** @phpstan-ignore-line */
-                    return OrderStates::COMPLETELY_REFUNDED;
-                } else if ($hasCreateInvoiceReported) {
-                    return OrderStates::INVOICED;
-                } else if ($hasCancelReported) {
-                    return OrderStates::CANCELED;
-                } else {
-                    return OrderStates::CHECKOUT_CONFIRMED;
                 }
+                if ($hasRefundReported) {  /** @phpstan-ignore-line */
+                    return OrderStates::COMPLETELY_REFUNDED;
+                }
+                if ($hasCreateInvoiceReported) {
+                    return OrderStates::INVOICED;
+                }
+                if ($hasCancelReported) {
+                    return OrderStates::CANCELED;
+                }
+
+                return OrderStates::CHECKOUT_CONFIRMED;
+
             case OrderCheckProcessStates::UNCHECKED:
             default:
                 return null;
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public static function createOrderColumns()
+    {
+        self::addOrderPreCheckResult();
+        self::addShippingReported();
+        self::addReportedTrackingCode();
+        self::addOrderBasketHash();
+        self::addOrderState();
+        self::addOrderStateData();
+    }
+
+    /**
+     * @return void
+     */
+    private static function addOrderPreCheckResult()
+    {
+        self::addTableColumn(
+            'oxorder',
+            'AXYTOSKAUFAUFRECHNUNGORDERPRECHECKRESULT',
+            'TEXT'
+        );
+    }
+
+    /**
+     * @return void
+     */
+    private static function addShippingReported()
+    {
+        self::addTableColumn(
+            'oxorder',
+            'AXYTOSKAUFAUFRECHNUNGSHIPPINGREPORTED',
+            'TINYINT(1) NOT NULL DEFAULT 0'
+        );
+    }
+
+    /**
+     * @return void
+     */
+    private static function addReportedTrackingCode()
+    {
+        self::addTableColumn(
+            'oxorder',
+            'AXYTOSKAUFAUFRECHNUNGREPORTEDTRACKINGCODE',
+            "VARCHAR(128) NOT NULL DEFAULT ''"
+        );
+    }
+
+    /**
+     * @return void
+     */
+    private static function addOrderBasketHash()
+    {
+        self::addTableColumn(
+            'oxorder',
+            'AXYTOSKAUFAUFRECHNUNGORDERBASKETHASH',
+            "VARCHAR(64) NOT NULL DEFAULT ''" // possible hash sha256 with 64 chars, but not sha512!
+        );
+    }
+
+    /**
+     * @return void
+     */
+    private static function addOrderState()
+    {
+        self::addTableColumn(
+            'oxorder',
+            'AXYTOSKAUFAUFRECHNUNGORDERSTATE',
+            'TEXT'
+        );
+    }
+
+    /**
+     * @return void
+     */
+    private static function addOrderStateData()
+    {
+        self::addTableColumn(
+            'oxorder',
+            'AXYTOSKAUFAUFRECHNUNGORDERSTATEDATA',
+            'TEXT'
+        );
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $definition
+     *
+     * @return void
+     */
+    private static function addTableColumn($tableName, $columnName, $definition)
+    {
+        $container = ContainerFactory::getInstance()->getContainer();
+        /** @var QueryBuilderFactoryInterface */
+        $queryBuilderFactory = $container->get(QueryBuilderFactoryInterface::class);
+        $queryBuilder = $queryBuilderFactory->create();
+
+        // SQL to check if column exists
+        $checkColumnSql = 'SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?';
+        $columnExists = intval($queryBuilder->getConnection()->fetchOne($checkColumnSql, [$tableName, $columnName]));
+
+        // If column doesn't exist
+        if (0 === $columnExists) {
+            $statement = "ALTER TABLE {$tableName} ADD COLUMN {$columnName} {$definition}";
+            $queryBuilder->getConnection()->executeStatement($statement);
         }
     }
 }

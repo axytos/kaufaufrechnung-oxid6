@@ -27,6 +27,7 @@ class PluginOrderFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
+     *
      * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\PluginOrderInterface
      */
     public function create($order)
@@ -39,8 +40,8 @@ class PluginOrderFactory
     }
 
     /**
-     *
      * @param \OxidEsales\Eshop\Application\Model\Order[] $orders
+     *
      * @return \Axytos\KaufAufRechnung\Core\Plugin\Abstractions\PluginOrderInterface[]
      */
     public function createMany($orders)

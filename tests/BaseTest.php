@@ -2,19 +2,20 @@
 
 namespace Axytos\KaufAufRechnung_OXID6\Tests;
 
-use OxidEsales\Eshop\Application\Model\Address;
-use OxidEsales\Eshop\Core\Base;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class BaseTest extends TestCase
 {
     /**
      * @return void
      */
-    public function test_OXID6_class_can_be_autoloaded()
+    public function test_oxi_d_class_can_be_autoloaded()
     {
-        $address = $this->createMock(Address::class);
+        $address = $this->createMock(\OxidEsales\Eshop\Application\Model\Address::class);
 
-        $this->assertInstanceOf(Base::class, $address);
+        $this->assertInstanceOf(\OxidEsales\Eshop\Core\Base::class, $address);
     }
 }

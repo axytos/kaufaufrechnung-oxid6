@@ -4,17 +4,15 @@ namespace Axytos\KaufAufRechnung_OXID6\DataMapping;
 
 use Axytos\ECommerce\DataTransferObjects\DeliveryAddressDto;
 use Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository;
-use OxidEsales\Eshop\Application\Model\Order;
 
 class DeliveryAddressDtoFactory
 {
     /**
-     * @var \Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository
+     * @var OrderRepository
      */
     private $orderRepository;
 
     /**
-     * @param \Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository $orderRepository
      * @return void
      */
     public function __construct(OrderRepository $orderRepository)
@@ -24,16 +22,17 @@ class DeliveryAddressDtoFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
-     * @return \Axytos\ECommerce\DataTransferObjects\DeliveryAddressDto
+     *
+     * @return DeliveryAddressDto
      */
     public function create($order)
     {
         $deliveryAddressDto = new DeliveryAddressDto();
 
-        if (strval($order->getFieldData("oxdelstreet")) !== '') {
-            $deliveryAddressDto->addressLine1 = $order->getFieldData("oxdelstreet") . " " . $order->getFieldData("oxdelstreetnr");
+        if ('' !== strval($order->getFieldData('oxdelstreet'))) {
+            $deliveryAddressDto->addressLine1 = $order->getFieldData('oxdelstreet') . ' ' . $order->getFieldData('oxdelstreetnr');
         } else {
-            $deliveryAddressDto->addressLine1 = $order->getFieldData("oxbillstreet") . " " . $order->getFieldData("oxbillstreetnr");
+            $deliveryAddressDto->addressLine1 = $order->getFieldData('oxbillstreet') . ' ' . $order->getFieldData('oxbillstreetnr');
         }
 
         $deliveryAddressDto->city = $this->getStringFieldOrAlternative($order, 'oxdelcity', 'oxbillcity');
@@ -45,12 +44,12 @@ class DeliveryAddressDtoFactory
         $deliveryAddressDto->zipCode = $this->getStringFieldOrAlternative($order, 'oxdelzip', 'oxbillzip');
 
         $countryId = $this->getStringFieldOrAlternative($order, 'oxdelcountryid', 'oxbillcountryid');
-        if ($countryId !== "") {
+        if ('' !== $countryId) {
             $deliveryAddressDto->country = $this->orderRepository->findDeliveryAddressCountryById($countryId);
         }
 
         $stateId = $this->getStringFieldOrAlternative($order, 'oxdelstateid', 'oxbillstateid');
-        if ($stateId !== "") {
+        if ('' !== $stateId) {
             $deliveryAddressDto->region = $this->orderRepository->findDeliveryAddressStateById($stateId);
         }
 
@@ -59,25 +58,28 @@ class DeliveryAddressDtoFactory
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
-     * @param string $fieldName
-     * @param string $altFieldName
+     * @param string                                    $fieldName
+     * @param string                                    $altFieldName
+     *
      * @return string|null
      */
     private function getStringFieldOrAlternative($order, $fieldName, $altFieldName)
     {
         $fieldValue = $this->getStringField($order, $fieldName);
 
-        // some minor version of OXID6 allow columns not to be null, e.g. OXDELCOUNTRYID
+        // some minor version of OXID allow columns not to be null, e.g. OXDELCOUNTRYID
         // so we need to also check for empty values
-        if (is_null($fieldValue) || trim($fieldValue) === '') {
+        if (is_null($fieldValue) || '' === trim($fieldValue)) {
             return $this->getStringField($order, $altFieldName);
         }
+
         return $fieldValue;
     }
 
     /**
      * @param \OxidEsales\Eshop\Application\Model\Order $order
-     * @param string $fieldName
+     * @param string                                    $fieldName
+     *
      * @return string|null
      */
     private function getStringField($order, $fieldName)
@@ -86,6 +88,7 @@ class DeliveryAddressDtoFactory
         if (!is_null($fieldValue)) {
             return strval($fieldValue);
         }
+
         return null;
     }
 }

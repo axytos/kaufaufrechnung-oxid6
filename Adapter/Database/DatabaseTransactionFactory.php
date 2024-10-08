@@ -8,7 +8,7 @@ use Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository;
 class DatabaseTransactionFactory implements DatabaseTransactionFactoryInterface
 {
     /**
-     * @var \Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository
+     * @var OrderRepository
      */
     private $orderRepository;
 

@@ -15,7 +15,8 @@ use OxidEsales\EshopCommunity\Internal\Transition\ShopEvents\BeforeModelUpdateEv
 class ShippingSubscriber extends AbstractShopAwareEventSubscriber
 {
     /**
-     * @param \OxidEsales\EshopCommunity\Internal\Transition\ShopEvents\BeforeModelUpdateEvent $event
+     * @param BeforeModelUpdateEvent $event
+     *
      * @return void
      */
     public function beforeModelUpdate($event)

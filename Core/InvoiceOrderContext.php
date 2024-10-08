@@ -3,26 +3,8 @@
 namespace Axytos\KaufAufRechnung_OXID6\Core;
 
 use Axytos\ECommerce\Clients\Invoice\InvoiceOrderContextInterface;
-use Axytos\ECommerce\DataTransferObjects\BasketDto;
-use Axytos\ECommerce\DataTransferObjects\CreateInvoiceBasketDto;
-use Axytos\ECommerce\DataTransferObjects\CustomerDataDto;
-use Axytos\ECommerce\DataTransferObjects\DeliveryAddressDto;
-use Axytos\ECommerce\DataTransferObjects\InvoiceAddressDto;
 use Axytos\ECommerce\DataTransferObjects\RefundBasketDto;
 use Axytos\ECommerce\DataTransferObjects\ReturnPositionModelDtoCollection;
-use Axytos\ECommerce\DataTransferObjects\ShippingBasketPositionDtoCollection;
-use Axytos\KaufAufRechnung_OXID6\DataMapping\BasketDtoFactory;
-use Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceBasketDtoFactory;
-use Axytos\KaufAufRechnung_OXID6\DataMapping\CustomerDataDtoFactory;
-use Axytos\KaufAufRechnung_OXID6\DataMapping\DeliveryAddressDtoFactory;
-use Axytos\KaufAufRechnung_OXID6\DataMapping\InvoiceAddressDtoFactory;
-use Axytos\KaufAufRechnung_OXID6\DataMapping\ShippingBasketPositionDtoCollectionFactory;
-use Axytos\KaufAufRechnung_OXID6\ValueCalculation\LogisticianCalculator;
-use Axytos\KaufAufRechnung_OXID6\ValueCalculation\TrackingIdCalculator;
-use DateTimeImmutable;
-use DateTimeInterface;
-use OxidEsales\Eshop\Application\Model\Order;
-use OxidEsales\Eshop\Core\Field;
 
 class InvoiceOrderContext implements InvoiceOrderContextInterface
 {
@@ -63,16 +45,29 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
      */
     private $logisticianCalculator;
 
+    /**
+     * @param \OxidEsales\Eshop\Application\Model\Order                                            $order
+     * @param \Axytos\KaufAufRechnung_OXID6\DataMapping\CustomerDataDtoFactory                     $customerDataDtoFactory
+     * @param \Axytos\KaufAufRechnung_OXID6\DataMapping\InvoiceAddressDtoFactory                   $invoiceAddressDtoFactory
+     * @param \Axytos\KaufAufRechnung_OXID6\DataMapping\DeliveryAddressDtoFactory                  $deliveryAddressDtoFactory
+     * @param \Axytos\KaufAufRechnung_OXID6\DataMapping\BasketDtoFactory                           $basketDtoFactory
+     * @param \Axytos\KaufAufRechnung_OXID6\DataMapping\CreateInvoiceBasketDtoFactory              $createInvoiceBasketDtoFactory
+     * @param \Axytos\KaufAufRechnung_OXID6\DataMapping\ShippingBasketPositionDtoCollectionFactory $shippingBasketPositionDtoCollectionFactory
+     * @param \Axytos\KaufAufRechnung_OXID6\ValueCalculation\TrackingIdCalculator                  $trackingIdCalculator
+     * @param \Axytos\KaufAufRechnung_OXID6\ValueCalculation\LogisticianCalculator                 $logisticianCalculator
+     *
+     * @return void
+     */
     public function __construct(
-        Order $order,
-        CustomerDataDtoFactory $customerDataDtoFactory,
-        InvoiceAddressDtoFactory $invoiceAddressDtoFactory,
-        DeliveryAddressDtoFactory $deliveryAddressDtoFactory,
-        BasketDtoFactory $basketDtoFactory,
-        CreateInvoiceBasketDtoFactory $createInvoiceBasketDtoFactory,
-        ShippingBasketPositionDtoCollectionFactory $shippingBasketPositionDtoCollectionFactory,
-        TrackingIdCalculator $trackingIdCalculator,
-        LogisticianCalculator $logisticianCalculator
+        $order,
+        $customerDataDtoFactory,
+        $invoiceAddressDtoFactory,
+        $deliveryAddressDtoFactory,
+        $basketDtoFactory,
+        $createInvoiceBasketDtoFactory,
+        $shippingBasketPositionDtoCollectionFactory,
+        $trackingIdCalculator,
+        $logisticianCalculator
     ) {
         $this->order = $order;
         $this->customerDataDtoFactory = $customerDataDtoFactory;
@@ -99,7 +94,7 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
     public function getOrderInvoiceNumber()
     {
         /** @var string */
-        return $this->order->getFieldData("oxbillnr");
+        return $this->order->getFieldData('oxbillnr');
     }
 
     /**
@@ -108,7 +103,7 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
     public function getOrderDateTime()
     {
         /** @phpstan-ignore-next-line */
-        return DateTimeImmutable::createFromFormat('Y-m-d G:i:s', $this->order->getFieldData("oxorderdate"));
+        return \DateTimeImmutable::createFromFormat('Y-m-d G:i:s', $this->order->getFieldData('oxorderdate'));
     }
 
     /**
@@ -144,7 +139,7 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
     }
 
     /**
-     * @return \Axytos\ECommerce\DataTransferObjects\RefundBasketDto
+     * @return RefundBasketDto
      */
     public function getRefundBasket()
     {
@@ -170,7 +165,7 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
     }
 
     /**
-     * @return \Axytos\ECommerce\DataTransferObjects\ReturnPositionModelDtoCollection
+     * @return ReturnPositionModelDtoCollection
      */
     public function getReturnPositions()
     {
@@ -188,12 +183,13 @@ class InvoiceOrderContext implements InvoiceOrderContextInterface
 
     /**
      * @param mixed[] $data
+     *
      * @return void
      */
     public function setPreCheckResponseData($data)
     {
         /** @phpstan-ignore-next-line */
-        $this->order->oxorder__axytoskaufaufrechnungorderprecheckresult = new Field(base64_encode(serialize($data)));
+        $this->order->oxorder__axytoskaufaufrechnungorderprecheckresult = new \OxidEsales\Eshop\Core\Field(base64_encode(serialize($data)));
         $this->order->save();
     }
 

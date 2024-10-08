@@ -11,8 +11,6 @@ services:
 
   Axytos\KaufAufRechnung_OXID6\Client\PaymentMethodConfiguration:
 
-  Axytos\KaufAufRechnung_OXID6\Client\Oxid6ShopVersionProvider:
-
   Axytos\KaufAufRechnung_OXID6\Logging\LoggerAdapter:
 
   Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler:

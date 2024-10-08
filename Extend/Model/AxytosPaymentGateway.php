@@ -10,7 +10,6 @@ use Axytos\KaufAufRechnung_OXID6\Configuration\PluginConfiguration;
 use Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler;
 use Axytos\KaufAufRechnung_OXID6\Events\AxytosEvents;
 use Axytos\KaufAufRechnung_OXID6\Extend\AxytosServiceContainer;
-use OxidEsales\Eshop\Core\Registry;
 
 class AxytosPaymentGateway extends AxytosPaymentGateway_parent
 {
@@ -18,23 +17,24 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
 
     /**
      * @phpstan-ignore-next-line
-     * @var \Axytos\ECommerce\Clients\Invoice\PluginConfigurationValidator
+     *
+     * @var PluginConfigurationValidator
      */
     private $pluginConfigurationValidator;
     /**
-     * @var \Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler
+     * @var ErrorHandler
      */
     private $errorHandler;
     /**
-     * @var \Axytos\KaufAufRechnung_OXID6\Configuration\PluginConfiguration
+     * @var PluginConfiguration
      */
     private $pluginConfiguration;
     /**
-     * @var \Axytos\KaufAufRechnung_OXID6\Adapter\PluginOrderFactory
+     * @var PluginOrderFactory
      */
     private $pluginOrderFactory;
     /**
-     * @var \Axytos\KaufAufRechnung\Core\Model\AxytosOrderFactory
+     * @var AxytosOrderFactory
      */
     private $axytosOrderFactory;
 
@@ -48,32 +48,30 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
         $this->axytosOrderFactory = $this->getFromAxytosServiceContainer(AxytosOrderFactory::class);
     }
 
-    /**
-     * @return bool
-     */
-    public function executePayment($amount, &$oOrder)
+    public function executePayment($dAmount, &$oOrder)
     {
-        /** @var \Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosOrder */
+        /** @var AxytosOrder */
         $order = $oOrder;
-        $session = Registry::getSession();
+        $session = \OxidEsales\Eshop\Core\Registry::getSession();
         $sessionVariableKey = AxytosEvents::PAYMENT_METHOD_ID . '_error_id';
         $sessionVariableErrorMessage = AxytosEvents::PAYMENT_METHOD_ID . '_error_message';
 
         if (
             is_null($order)
             || is_null($order->getPaymentType())
-            || $order->getPaymentType()->getFieldData("oxpaymentsid") !== AxytosEvents::PAYMENT_METHOD_ID
+            || AxytosEvents::PAYMENT_METHOD_ID !== $order->getPaymentType()->getFieldData('oxpaymentsid')
         ) {
-            $success = parent::executePayment($amount, $order);
+            $success = parent::executePayment($dAmount, $order);
             if ($success) {
                 $session->deleteVariable($sessionVariableKey);
                 $session->deleteVariable($sessionVariableErrorMessage);
             }
+
             return $success;
         }
 
         try {
-            /** @var \Axytos\KaufAufRechnung_OXID6\Extend\Model\AxytosOrder */
+            /** @var AxytosOrder */
             $order = $oOrder;
 
             // add pre-check code here
@@ -86,9 +84,9 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
 
             $shopAction = $axytosOrder->getOrderCheckoutAction();
 
-            if ($shopAction === AxytosOrderCheckoutAction::CHANGE_PAYMENT_METHOD) {
-                $config = Registry::getConfig();
-                $utils = Registry::getUtils();
+            if (AxytosOrderCheckoutAction::CHANGE_PAYMENT_METHOD === $shopAction) {
+                $config = \OxidEsales\Eshop\Core\Registry::getConfig();
+                $utils = \OxidEsales\Eshop\Core\Registry::getUtils();
                 $order->delete();
 
                 $session->setVariable($sessionVariableKey, $shopAction);
@@ -98,19 +96,21 @@ class AxytosPaymentGateway extends AxytosPaymentGateway_parent
                 }
 
                 $utils->redirect($config->getSslShopUrl() . 'index.php?cl=payment&' . AxytosEvents::PAYMENT_METHOD_ID . '_error_id=' . $shopAction, false);
-                return false;
-            } else {
-                $success = parent::executePayment($amount, $order);
 
-                return $success;
+                return false;
             }
+            $success = parent::executePayment($dAmount, $order);
+
+            return $success;
         } catch (\Throwable $th) {
             $this->errorHandler->handle($th);
             $order->delete();
+
             return false;
         } catch (\Exception $th) { // @phpstan-ignore-line | php5.6 compatibility
             $this->errorHandler->handle($th);
             $order->delete();
+
             return false;
         }
     }

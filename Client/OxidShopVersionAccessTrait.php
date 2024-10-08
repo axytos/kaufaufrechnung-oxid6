@@ -4,12 +4,12 @@ namespace Axytos\KaufAufRechnung_OXID6\Client;
 
 use OxidEsales\Eshop\Core\ShopVersion;
 
-class Oxid6ShopVersionProvider
+trait OxidShopVersionAccessTrait
 {
     /**
      * @return string
      */
-    public function getVersion()
+    protected function getVersion()
     {
         return ShopVersion::getVersion();
     }

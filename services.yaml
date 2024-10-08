@@ -11,15 +11,13 @@ services:
 
   Axytos\KaufAufRechnung_OXID6\Client\PaymentMethodConfiguration:
 
-  Axytos\KaufAufRechnung_OXID6\Client\Oxid6ShopVersionProvider:
-
   Axytos\KaufAufRechnung_OXID6\Logging\LoggerAdapter:
 
   Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler:
 
-  Axytos\KaufAufRechnung_OXID6\Core\OrderCheckProcessStateMachine:
-
   Axytos\KaufAufRechnung_OXID6\Core\InvoiceOrderContextFactory:
+
+  Axytos\KaufAufRechnung_OXID6\DataAbstractionLayer\OrderRepository:
 
   Axytos\KaufAufRechnung_OXID6\DataMapping\ShippingBasketPositionDtoCollectionFactory:
 
@@ -46,6 +44,8 @@ services:
   Axytos\KaufAufRechnung_OXID6\DataMapping\BasketPositionDtoCollectionFactory:
 
   Axytos\KaufAufRechnung_OXID6\DataMapping\BasketPositionDtoFactory:
+
+  Axytos\KaufAufRechnung_OXID6\OrderSync\OrderSyncCronJob:
 
   Axytos\ECommerce\Abstractions\ApiHostProviderInterface:
     class: Axytos\KaufAufRechnung_OXID6\Client\ApiHostProvider
@@ -80,6 +80,8 @@ services:
   Axytos\ECommerce\Clients\ErrorReporting\ErrorReportingClientInterface:
     class: Axytos\ECommerce\AxytosECommerceClient
 
+  Axytos\ECommerce\DataMapping\DtoArrayMapper:
+
   Axytos\KaufAufRechnung_OXID6\Subscribers\ShippingSubscriber:
     class: Axytos\KaufAufRechnung_OXID6\Subscribers\ShippingSubscriber
     tags: ["kernel.event_subscriber"]
@@ -101,3 +103,37 @@ services:
   Axytos\KaufAufRechnung_OXID6\ValueCalculation\ShippingCostCalculator:
 
   Axytos\KaufAufRechnung_OXID6\ValueCalculation\VoucherDiscountCalculator:
+
+  Axytos\KaufAufRechnung\Core\OrderSyncWorker:
+
+  Axytos\KaufAufRechnung\Core\Model\AxytosOrderFactory:
+
+  Axytos\KaufAufRechnung\Core\Model\AxytosOrderCommandFacade:
+
+  Axytos\KaufAufRechnung_OXID6\Adapter\OrderSyncRepository:
+
+  Axytos\KaufAufRechnung_OXID6\Adapter\PluginOrderFactory:
+
+  Axytos\KaufAufRechnung_OXID6\Adapter\Database\DatabaseTransactionFactory:
+
+  Axytos\KaufAufRechnung_OXID6\Adapter\Logging\LoggerAdapter:
+
+  Axytos\KaufAufRechnung_OXID6\Adapter\HashCalculation\HashCalculator:
+
+  Axytos\KaufAufRechnung\Core\Plugin\Abstractions\OrderSyncRepositoryInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Adapter\OrderSyncRepository
+
+  Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Database\DatabaseTransactionFactoryInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Adapter\Database\DatabaseTransactionFactory
+
+  Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Logging\LoggerAdapterInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Adapter\Logging\LoggerAdapter
+
+  Axytos\KaufAufRechnung_OXID6\Adapter\HashCalculation\HashAlgorithmInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Adapter\HashCalculation\SHA256HashAlgorithm
+
+  Axytos\KaufAufRechnung\Core\Abstractions\Model\Actions\ActionExecutorInterface:
+    class: Axytos\KaufAufRechnung\Core\Model\Actions\ActionExecutor
+
+  Axytos\KaufAufRechnung\Core\Plugin\Abstractions\Configuration\ClientSecretProviderInterface:
+    class: Axytos\KaufAufRechnung_OXID6\Adapter\Configuration\ClientSecretProvider

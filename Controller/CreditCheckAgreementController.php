@@ -3,13 +3,13 @@
 namespace Axytos\KaufAufRechnung_OXID6\Controller;
 
 use Axytos\ECommerce\Clients\Checkout\CheckoutClientInterface;
+use Axytos\KaufAufRechnung_OXID6\DependencyInjection\ContainerFactory;
 use Axytos\KaufAufRechnung_OXID6\ErrorReporting\ErrorHandler;
 use OxidEsales\Eshop\Application\Controller\FrontendController;
-use OxidEsales\EshopCommunity\Internal\Container\ContainerFactory;
 
 class CreditCheckAgreementController extends FrontendController
 {
-    protected $_sThisTemplate = "credit_check_agreement.tpl";
+    protected $_sThisTemplate = 'credit_check_agreement.tpl';
 
     /**
      * @return string
@@ -18,23 +18,29 @@ class CreditCheckAgreementController extends FrontendController
     {
         try {
             /** @var CheckoutClientInterface */
-            $checkoutClient =  ContainerFactory::getInstance()
+            $checkoutClient = ContainerFactory::getInstance()
                 ->getContainer()
-                ->get(CheckoutClientInterface::class);
+                ->get(CheckoutClientInterface::class)
+            ;
+
             return $checkoutClient->getCreditCheckAgreementInfo();
         } catch (\Throwable $th) {
             /** @var ErrorHandler */
-            $errorHandler =  ContainerFactory::getInstance()
+            $errorHandler = ContainerFactory::getInstance()
                 ->getContainer()
-                ->get(ErrorHandler::class);
+                ->get(ErrorHandler::class)
+            ;
             $errorHandler->handle($th);
+
             return '';
         } catch (\Exception $th) { // @phpstan-ignore-line bcause of php 5.6 compatibility
             /** @var ErrorHandler */
-            $errorHandler =  ContainerFactory::getInstance()
+            $errorHandler = ContainerFactory::getInstance()
                 ->getContainer()
-                ->get(ErrorHandler::class);
+                ->get(ErrorHandler::class)
+            ;
             $errorHandler->handle($th);
+
             return '';
         }
     }

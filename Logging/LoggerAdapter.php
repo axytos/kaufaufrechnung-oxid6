@@ -3,11 +3,11 @@
 namespace Axytos\KaufAufRechnung_OXID6\Logging;
 
 use Axytos\ECommerce\Logging\LoggerAdapterInterface;
-use OxidEsales\Eshop\Core\Registry;
-use Psr\Log\LoggerInterface;
 
 class LoggerAdapter implements LoggerAdapterInterface
 {
+    use OxidLoggerFactoryTrait;
+
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -15,11 +15,12 @@ class LoggerAdapter implements LoggerAdapterInterface
 
     public function __construct()
     {
-        $this->logger = Registry::getLogger();
+        $this->logger = $this->getLogger();
     }
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function error($message)
@@ -29,6 +30,7 @@ class LoggerAdapter implements LoggerAdapterInterface
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function warning($message)
@@ -38,6 +40,7 @@ class LoggerAdapter implements LoggerAdapterInterface
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function info($message)
@@ -47,6 +50,7 @@ class LoggerAdapter implements LoggerAdapterInterface
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function debug($message)

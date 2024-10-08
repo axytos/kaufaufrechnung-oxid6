@@ -3,21 +3,24 @@
 namespace Axytos\KaufAufRechnung_OXID6\Tests\Unit\ValueCalculation;
 
 use Axytos\KaufAufRechnung_OXID6\ValueCalculation\VoucherDiscountCalculator;
-use OxidEsales\Eshop\Application\Model\Order;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class VoucherDiscountCalculatorTest extends TestCase
 {
     /**
-     * @var \Axytos\KaufAufRechnung_OXID6\ValueCalculation\VoucherDiscountCalculator
+     * @var VoucherDiscountCalculator
      */
     private $sut;
 
     /**
      * @before
+     *
      * @return void
      */
     #[Before]
@@ -28,7 +31,9 @@ class VoucherDiscountCalculatorTest extends TestCase
 
     /**
      * @param mixed $oxvoucherdiscount
+     *
      * @return void
+     *
      * @dataProvider getZeroValues
      */
     #[DataProvider('getZeroValues')]
@@ -70,17 +75,19 @@ class VoucherDiscountCalculatorTest extends TestCase
 
     /**
      * @param mixed $oxvoucherdiscount
-     * @return Order&MockObject
+     *
+     * @return \OxidEsales\Eshop\Application\Model\Order&MockObject
      */
     private function createOrderMock($oxvoucherdiscount)
     {
-        /** @var Order&MockObject */
-        $order = $this->createMock(Order::class);
+        /** @var \OxidEsales\Eshop\Application\Model\Order&MockObject */
+        $order = $this->createMock(\OxidEsales\Eshop\Application\Model\Order::class);
         $order->method('getFieldData')->willReturnCallback(function ($field) use ($oxvoucherdiscount) {
             switch ($field) {
                 case 'oxvoucherdiscount':
                     return $oxvoucherdiscount;
             }
+
             return null;
         });
 

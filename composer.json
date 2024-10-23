@@ -45,5 +45,5 @@
             "target-directory": "axytos/kaufaufrechnung"
         }
     },
-    "minimum-stability": "RC"
+    "minimum-stability": "stable"
 }

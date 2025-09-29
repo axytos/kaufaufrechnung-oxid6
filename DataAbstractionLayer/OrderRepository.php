@@ -6,6 +6,7 @@ use Axytos\ECommerce\Order\OrderCheckProcessStates;
 use Axytos\KaufAufRechnung\Core\Model\OrderStateMachine\OrderStates;
 use Axytos\KaufAufRechnung_OXID6\DependencyInjection\ContainerFactory;
 use Axytos\KaufAufRechnung_OXID6\Events\AxytosEvents;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInterface;
@@ -13,22 +14,21 @@ use OxidEsales\EshopCommunity\Internal\Framework\Database\QueryBuilderFactoryInt
 class OrderRepository
 {
     /**
+     * @var Connection
+     */
+    private $connection;
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    /**
      * @return void
      */
     public function startTransaction()
     {
-        /**
-         * @var \Doctrine\DBAL\Query\QueryBuilder
-         *
-         * @phpstan-ignore-next-line
-         */
-        $queryBuilder = ContainerFactory::getInstance()
-            ->getContainer()
-            ->get(QueryBuilderFactoryInterface::class)
-            ->create()
-        ;
-
-        $queryBuilder->getConnection()->beginTransaction();
+        $this->connection->beginTransaction();
     }
 
     /**
@@ -47,7 +47,7 @@ class OrderRepository
             ->create()
         ;
 
-        $queryBuilder->getConnection()->commit();
+        $this->connection->commit();
     }
 
     /**
@@ -64,9 +64,10 @@ class OrderRepository
             ->getContainer()
             ->get(QueryBuilderFactoryInterface::class)
             ->create()
+            ->executeStatement()
         ;
 
-        $queryBuilder->getConnection()->rollBack();
+        $this->connection->rollBack();
     }
 
     /**
@@ -112,7 +113,7 @@ class OrderRepository
         ;
 
         /** @var \Doctrine\DBAL\Result */
-        $result = $queryBuilder->execute();
+        $result = $queryBuilder->executeQuery();
         $value = strval($result->fetchOne());
 
         return '' !== $value ? $value : '';
@@ -142,7 +143,7 @@ class OrderRepository
         ;
 
         /** @phpstan-ignore-next-line */
-        $country = strval($countryQueryBuilder->execute()->fetchOne());
+        $country = strval($countryQueryBuilder->executeQuery()->fetchOne());
 
         return '' !== $country ? $country : null;
     }
@@ -171,7 +172,7 @@ class OrderRepository
         ;
 
         /** @phpstan-ignore-next-line */
-        $state = strval($stateQueryBuilder->execute()->fetchOne());
+        $state = strval($stateQueryBuilder->executeQuery()->fetchOne());
 
         return '' !== $state ? $state : null;
     }
@@ -200,7 +201,7 @@ class OrderRepository
         ;
 
         /** @phpstan-ignore-next-line */
-        $country = strval($countryQueryBuilder->execute()->fetchOne());
+        $country = strval($countryQueryBuilder->executeQuery()->fetchOne());
 
         return '' !== $country ? $country : null;
     }
@@ -229,7 +230,7 @@ class OrderRepository
         ;
 
         /** @phpstan-ignore-next-line */
-        $state = strval($stateQueryBuilder->execute()->fetchOne());
+        $state = strval($stateQueryBuilder->executeQuery()->fetchOne());
 
         return '' !== $state ? $state : null;
     }
@@ -292,7 +293,7 @@ class OrderRepository
         }
 
         /** @var \Doctrine\DBAL\Result */
-        $result = $queryBuilder->execute();
+        $result = $queryBuilder->executeQuery();
         /** @var array<array<string,mixed>> */
         $rows = $result->fetchAllAssociative();
 
@@ -342,7 +343,7 @@ class OrderRepository
         ;
 
         /** @var \Doctrine\DBAL\Result */
-        $result = $queryBuilder->execute();
+        $result = $queryBuilder->executeQuery();
         $oxid = strval($result->fetchOne());
 
         return $this->findOrder($oxid);
@@ -367,8 +368,8 @@ class OrderRepository
         $orderCheckProcessStatusColumnName = 'axytoskaufaufrechnungordercheckprocessstatus';
         $orderStateColumnName = 'axytoskaufaufrechnungorderstate';
 
-        $checkProcessStatusColumnExists = intval($queryBuilder->getConnection()->fetchOne($checkColumnSql, [$tableName, $orderCheckProcessStatusColumnName]));
-        $orderStateColumnExists = intval($queryBuilder->getConnection()->fetchOne($checkColumnSql, [$tableName, $orderStateColumnName]));
+        $checkProcessStatusColumnExists = intval($this->connection->fetchOne($checkColumnSql, [$tableName, $orderCheckProcessStatusColumnName]));
+        $orderStateColumnExists = intval($this->connection->fetchOne($checkColumnSql, [$tableName, $orderStateColumnName]));
 
         if (1 === $checkProcessStatusColumnExists && 1 === $orderStateColumnExists) {
             $queryBuilder->select('oxorder.oxid')
@@ -381,7 +382,7 @@ class OrderRepository
             ;
 
             /** @var \Doctrine\DBAL\Result */
-            $result = $queryBuilder->execute();
+            $result = $queryBuilder->executeQuery();
             /** @var array<array<string,mixed>> */
             $rows = $result->fetchAllAssociative();
 
@@ -542,18 +543,20 @@ class OrderRepository
     private static function addTableColumn($tableName, $columnName, $definition)
     {
         $container = ContainerFactory::getInstance()->getContainer();
+        /** @var Connection */
+        $connection = $container->get(Connection::class);
         /** @var QueryBuilderFactoryInterface */
         $queryBuilderFactory = $container->get(QueryBuilderFactoryInterface::class);
         $queryBuilder = $queryBuilderFactory->create();
 
         // SQL to check if column exists
         $checkColumnSql = 'SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?';
-        $columnExists = intval($queryBuilder->getConnection()->fetchOne($checkColumnSql, [$tableName, $columnName]));
+        $columnExists = intval($connection->fetchOne($checkColumnSql, [$tableName, $columnName]));
 
         // If column doesn't exist
         if (0 === $columnExists) {
-            $statement = "ALTER TABLE {$tableName} ADD COLUMN {$columnName} {$definition}";
-            $queryBuilder->getConnection()->executeStatement($statement);
+            $sql = 'ALTER TABLE ' . $tableName . ' ADD COLUMN ' . $columnName . ' ' . $definition;
+            $connection->executeStatement($sql);
         }
     }
 }

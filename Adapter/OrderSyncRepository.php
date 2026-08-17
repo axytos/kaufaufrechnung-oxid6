@@ -26,7 +26,7 @@ class OrderSyncRepository implements OrderSyncRepositoryInterface
         $this->pluginOrderFactory = $pluginOrderFactory;
     }
 
-    public function getOrdersByStates($orderStates, $limit = null, $startId = null)
+    public function getOrdersByStates($orderStates, $limit = null, $startId = null, $cutoffDate = null)
     {
         $this->orderRepository->migrateOrderStates();
         $orders = $this->orderRepository->getOrdersByStates($orderStates, $limit, $startId);
